@@ -8,13 +8,14 @@
 
 ## Posibles nombres del juego:
 * Salvando Springfield
+* Homer Odyssey
 
 ## Sinopsis de “Los Simpson: La Película”: 
 La combinación de Homero, su nuevo puerco mascota, y un silo lleno de excremento podrían provocar un desastre que amenace no solo a Springfield, sino al mundo entero. Una muchedumbre enojada llega a la casa de los Simpson y divide a la familia. Con el destino de la Tierra en juego, Homero se prepara para intentar redimirse con la intención de salvar al mundo y ganarse el perdón de Marge.
 
 ## Desarrollo del juego niveles (2 ó 3):
 ### Nivel 1:
-Homero tira basura al río, cada basura que tire corresponderá a 10 puntos, y para poder pasar de nivel tendrá que completar 100 puntos, en este nivel no hay forma de que Homero pierda vida.
+Homero debe pasar por varios obstáculos, los cuales son engañosos y pueden contener trampas, por ejemplo, puede salir un obstáculo de la nada que no lo deje avanzar o, lo mate, este nivel se piensa para que sea desafiante o frustrante el poder llegar a la meta.
 ### Nivel 2: 
 En este nivel, los habitantes le arrojan objetos (aún no definidos) a Homero, el cual tendrá que esquivarlos, ya que si estos lo alcanzan su salud disminuirá. Para poder pasar el nivel, Homero estará expuesto a esta situación durante un tiempo determinado (aún por definir), cuando se complete este tiempo y si Homero sigue vivo, se dará por completado el nivel y podrá pasar al último escenario.
 ### Nivel 3 (Opcional): 
@@ -22,7 +23,7 @@ Expulsar bomba de la cúpula, luego de haber huido, homero quiere salvar a sprin
 
 ## Escenarios:
 ### Para el LVL 1: 
-Fondo de un río, ya sea una imagen de la película o un background de internet que sea adecuado, teniendo en cuenta nuestra visión del escenario.
+Fondo de la casa, ya sea una imagen de la película o un background de internet que sea adecuado, teniendo en cuenta nuestra visión del escenario.
 ### Para el LVL 2: 
 Los habitantes se ubicarán en la parte de arriba de la vista, y homero permanecerá abajo esquivando los objetos que le lanzarán los enemigos, respecto al background se implementará uno donde se distinga la casa de los simpson.
 ### Para el LVL 3: 
