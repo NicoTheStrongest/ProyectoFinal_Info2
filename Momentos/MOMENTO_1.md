@@ -28,7 +28,7 @@ En el primer nivel se implememntará colisiones y salto.
 Los objetos que en el nivel dos los habitantes van a arrojar a Homero, van a seguir una trayectoria circular y lineal, desde la parte superior de la pantalla, dirigiéndose hacia el rango donde se mueve Homero. 
 
 ## Clases:
-Inicialmente las clases qeu se tienen son: enemigo, físicas, jugador, mainwindow, mapa, menu, personaje y sprites.
+Inicialmente las clases que se tienen son: enemigo, físicas, jugador, mainwindow, mapa, menu, personaje y sprites.
 
 ## Escenarios:
 ### Para el LVL 1: 
