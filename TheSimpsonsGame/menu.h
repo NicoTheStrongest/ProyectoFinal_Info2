@@ -24,6 +24,9 @@ public:
     QGraphicsPixmapItem* menu;
 
     int elegirOpcion();
+    void cargarEscenaNivel1();
+    void cargarEscenaNivel2();
+
     void conectarBotones();
     void cargarPersonaje(QGraphicsScene *scene);
     void actualizarJuego();
@@ -36,9 +39,6 @@ private:
     Jugador* jugador;
     QTimer* timer;
 public slots:
-    void nivel1();
-    void nivel2();
-
 };
 
 #endif // MENU_H
