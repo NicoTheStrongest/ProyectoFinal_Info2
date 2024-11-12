@@ -1,4 +1,6 @@
 #include "menu.h"
+#include "jugador.h"
+#include "ui_mainwindow.h"
 #include <QApplication>
 
 Menu::Menu(QObject *parent)
@@ -9,8 +11,15 @@ Menu::Menu(Ui::MainWindow *ui) : vista(ui)
 {    
     escena = new QGraphicsScene;
     menu = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    jugador = new Jugador();
+    escena->addItem(jugador);
     escena->addItem(menu);
     vista->graphicsView->setScene(escena);
+    jugador->setFocus();
+    vista->graphicsView->setFocus();
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizarJuego()));
+    timer->start(16);
 }
 
 void Menu::conectarBotones() {
@@ -31,9 +40,12 @@ void Menu::nivel1()
     escena = new QGraphicsScene;
     menu = new QGraphicsPixmapItem(QPixmap(":/sprites/Springfield2.png"));
     escena->addItem(menu);
+    jugador->cargarPersonaje(escena);
+    jugador->setFocus();
     vista->graphicsView->setScene(escena);
     vista->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    timer->start(16);
 }
 
 void Menu::nivel2()
@@ -43,6 +55,12 @@ void Menu::nivel2()
     vista->botonSalir->setVisible(false);
 }
 
+void Menu::actualizarJuego(){
+    jugador->moverEndireccionActual();
+}
+void Menu::keyPressEvent(QKeyEvent *event){
+    jugador->keyPressEvent(event);
+}
 /*
 void Menu::salir()
 {
