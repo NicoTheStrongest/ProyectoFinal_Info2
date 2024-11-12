@@ -7,9 +7,11 @@
 #include <QTimer>
 #include <QMainWindow>
 #include <QDebug>
-
+#include <QKeyEvent>
 #include "ui_mainwindow.h"  // Incluye el archivo de interfaz
+#include "jugador.h"
 
+class Jugador;
 
 class Menu : public QObject, public QGraphicsPixmapItem
 {
@@ -23,12 +25,20 @@ public:
 
     int elegirOpcion();
     void conectarBotones();
+    void cargarPersonaje(QGraphicsScene *scene);
+    void actualizarJuego();
+    void keyPressEvent(QKeyEvent *event);
+
 signals:
+
 private:
     Ui::MainWindow* vista;
+    Jugador* jugador;
+    QTimer* timer;
 public slots:
     void nivel1();
     void nivel2();
+
 };
 
 #endif // MENU_H
