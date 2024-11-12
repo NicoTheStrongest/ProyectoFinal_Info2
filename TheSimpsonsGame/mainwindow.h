@@ -22,9 +22,15 @@ class MainWindow : public QMainWindow
 public:
     QGraphicsScene* scene;
     Menu* interfazPrincipal;
+    short int nivel;
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void renderEscena();
+public slots:
+    void nivel1();
+    void nivel2();
 private:
     Ui::MainWindow *ui;
 };

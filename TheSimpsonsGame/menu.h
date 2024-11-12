@@ -22,13 +22,12 @@ public:
     QGraphicsPixmapItem* menu;
 
     int elegirOpcion();
-    void conectarBotones();
+    void cargarEscenaNivel1();
+    void cargarEscenaNivel2();
 signals:
 private:
     Ui::MainWindow* vista;
 public slots:
-    void nivel1();
-    void nivel2();
 };
 
 #endif // MENU_H

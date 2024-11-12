@@ -13,17 +13,7 @@ Menu::Menu(Ui::MainWindow *ui) : vista(ui)
     vista->graphicsView->setScene(escena);
 }
 
-void Menu::conectarBotones() {
-    connect(vista->botonNivel1, &QPushButton::clicked, this, &Menu::nivel1);
-    connect(vista->botonNivel2, &QPushButton::clicked, this, &Menu::nivel2);
-    //connect(vista->botonNivel1, &QPushButton::clicked, this, &Menu::salir);
-    connect(vista->botonSalir, &QPushButton::clicked, this, [](){
-        qDebug() << "Botón salir presionado";
-        QApplication::quit();
-    });
-}
-
-void Menu::nivel1()
+void Menu::cargarEscenaNivel1()
 {
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
@@ -36,20 +26,16 @@ void Menu::nivel1()
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
-void Menu::nivel2()
+void Menu::cargarEscenaNivel2()
 {
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
     vista->botonSalir->setVisible(false);
-}
+    escena = new QGraphicsScene;
+    menu = new QGraphicsPixmapItem(QPixmap(":/sprites/Escenario2.jpeg").scaled(1000, 1000, Qt::KeepAspectRatio));
 
-/*
-void Menu::salir()
-{
-    vista->botonNivel1->setVisible(false);
-    vista->botonNivel2->setVisible(false);
-    vista->botonSalir->setVisible(false);
-    //qDebug() << "Se presionó ESC. Cerrando la aplicación...";
-    QApplication::quit();  // Cerrar la aplicación
+    escena->addItem(menu);
+    vista->graphicsView->setScene(escena);
+    vista->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
-*/
