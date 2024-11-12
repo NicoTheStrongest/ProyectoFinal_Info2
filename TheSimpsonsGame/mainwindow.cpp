@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "personaje.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     interfazPrincipal = new Menu(ui);
     renderEscena();
     //---------------------------------------//
+    ui->graphicsView->setFocus();
     ui->graphicsView->show();
+
 }
 
 MainWindow::~MainWindow()

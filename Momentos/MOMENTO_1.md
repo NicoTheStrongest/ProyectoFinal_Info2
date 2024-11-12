@@ -21,6 +21,15 @@ En este nivel, los habitantes le arrojan objetos (aún no definidos) a Homero, e
 ### Nivel 3 (Opcional): 
 Expulsar bomba de la cúpula, luego de haber huido, homero quiere salvar a springfield, por lo que tendrá que recolectar ítems (aún por definir) necesarios para tirar la bomba fuera de la cúpula, una vez los consiga, el nivel se dará por completado y Homero habrá salvado Springfield.
 
+## Físicas:
+### Nivel 1:
+En el primer nivel se implememntará colisiones y salto.
+### Nivel 2:
+Los objetos que en el nivel dos los habitantes van a arrojar a Homero, van a seguir una trayectoria circular y lineal, desde la parte superior de la pantalla, dirigiéndose hacia el rango donde se mueve Homero. 
+
+## Clases:
+Inicialmente las clases que se tienen son: enemigo, físicas, jugador, mainwindow, mapa, menu, personaje y sprites.
+
 ## Escenarios:
 ### Para el LVL 1: 
 Fondo de la casa, ya sea una imagen de la película o un background de internet que sea adecuado, teniendo en cuenta nuestra visión del escenario.
