@@ -29,7 +29,6 @@ private:
 public slots:
     void nivel1();
     void nivel2();
-    void salir();
 };
 
 #endif // MENU_H
