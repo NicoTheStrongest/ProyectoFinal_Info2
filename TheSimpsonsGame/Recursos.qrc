@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>sprites/Homer.gif</file>
+        <file>sprites/MenuPrincipal.png</file>
+        <file>sprites/Springfield2.png</file>
     </qresource>
 </RCC>

@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsView>
+
+
 #include "menu.h"
 #include "mapa.h"
 #include "personaje.h"
@@ -17,9 +20,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    QGraphicsScene* scene;
+    Menu* interfazPrincipal;
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 private:
     Ui::MainWindow *ui;
 };
