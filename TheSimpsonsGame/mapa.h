@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+
 class mapa : public QObject
 {
     Q_OBJECT

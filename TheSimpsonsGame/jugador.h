@@ -5,7 +5,7 @@
 #include "personaje.h"
 
 
-class jugador : public QObject, public personaje
+class jugador : public personaje
 {
     Q_OBJECT
 public:
