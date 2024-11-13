@@ -1,8 +1,14 @@
 <RCC>
     <qresource prefix="/">
-        <file>sprites/Homer.gif</file>
         <file>sprites/MenuPrincipal.png</file>
         <file>sprites/Springfield2.png</file>
         <file>sprites/Escenario2.jpeg</file>
+        <file>sprites/Bassura.png</file>
+        <file>sprites/Homer.png</file>
+        <file>sprites/HomerSpritesAct.png</file>
+        <file>sprites/MotoHomero.png</file>
+        <file>sprites/MovimientoHomero.png</file>
+        <file>sprites/NPC1.png</file>
+        <file>sprites/NPC2.png</file>
     </qresource>
 </RCC>
