@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include <QObject>
 #include <QGraphicsPixmapItem>
@@ -8,37 +8,30 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QString>
 #include "ui_mainwindow.h"  // Incluye el archivo de interfaz
 #include "jugador.h"
 
 class Jugador;
 
-class Menu : public QObject, public QGraphicsPixmapItem
+class Render : public QObject , public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    explicit Menu(QObject *parent = nullptr);
-    Menu(Ui::MainWindow *ui);
+    explicit Render(QObject *parent = nullptr);
+    Render(Ui::MainWindow *ui);
 
     QGraphicsScene* escena;
-    QGraphicsPixmapItem* menu;
+    QGraphicsPixmapItem* fondo;
 
     int elegirOpcion();
     void cargarEscenaNivel1();
+    void añadirBasura();
+    void añadirEnemigos();
     void cargarEscenaNivel2();
-
-    void conectarBotones();
-    void cargarPersonaje(QGraphicsScene *scene);
-    void actualizarJuego();
-    void keyPressEvent(QKeyEvent *event);
-
 signals:
-
 private:
     Ui::MainWindow* vista;
-    Jugador* jugador;
-    QTimer* timer;
-public slots:
 };
 
-#endif // MENU_H
+#endif // RENDER_H

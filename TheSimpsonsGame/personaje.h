@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 #include <Qpoint>
 #include <QKeyEvent>
+
 #include "sprites.h"
 #include "fisicas.h"
 
@@ -16,21 +17,22 @@ class personaje : public QObject
     Q_OBJECT
 
 public:
+    sprites personalSprite;
+
     explicit personaje(QObject *parent = nullptr);
-    personaje(Ui::MainWindow *ui);
-signals:
-private:
-    Ui::MainWindow* vista;
+
+    void setEscenario(QGraphicsScene* newEscenario);
+
     short int getVida() const;
     unsigned int getAncho() const;
     unsigned int getAltura() const;
-    void muerte();
-    void recibirDanno(short int cantidad);
-
-
 signals:
 
 private:
+    void muerte();
+    void recibirDanno(short int cantidad);
+
+    QGraphicsScene* escenario;
     short int vida;
     unsigned int ancho, altura, keys[8], danno;
 };
