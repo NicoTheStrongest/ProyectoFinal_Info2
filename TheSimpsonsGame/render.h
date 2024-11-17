@@ -28,10 +28,14 @@ public:
     void cargarEscenaNivel1();
     void añadirBasura();
     void añadirEnemigos();
+    void añadirObstaculos();
     void cargarEscenaNivel2();
+    void mostrarMensajeFinal(short int vida, QPoint posicion);
 signals:
 private:
     Ui::MainWindow* vista;
+    QLabel* puntaje;
+    QLabel* vida;
 };
 
 #endif // RENDER_H

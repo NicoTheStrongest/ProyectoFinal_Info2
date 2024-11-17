@@ -33,11 +33,16 @@ public:
     void keyPressEvent(QKeyEvent *event);
 public slots:
     void actualizarVista();
+    void actualizarPuntaje(short int nuevoPuntaje);
+    void actualizarVida(short int nuevaVida);
     void nivel1();
     void nivel2();
 private:
     Ui::MainWindow *ui;
     Jugador* jugador;
+    Enemigo* enemigo;
+    QLabel* puntaje;
+    QLabel* vida;
     QTimer* timer;
 };
 #endif // MAINWINDOW_H

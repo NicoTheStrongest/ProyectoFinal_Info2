@@ -24,6 +24,8 @@ void Render::cargarEscenaNivel1()
     escena->addItem(fondo);
     //añadimos basura
     añadirBasura();
+    //Añadimos obstaculos
+    //añadirObstaculos();
     //añadirEnemigos
     //añadirEnemigos();
     vista->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -44,6 +46,19 @@ void Render::añadirBasura()
     }
 }
 
+/*
+void Render::añadirObstaculos(){
+    QPixmap obstaculoPixmap(":/sprites/obstaculoMadera.png");
+    QPixmap scaledObstaculoPixmap = obstaculoPixmap.scaled(50, 100, Qt::KeepAspectRatio);
+    QVector<QPoint> posiciones = {QPoint(580, 380), QPoint(986, 380), QPoint(1400, 386)};
+    for (const QPoint &pos : posiciones){
+        QGraphicsPixmapItem *obstaculoItem = new QGraphicsPixmapItem(scaledObstaculoPixmap);
+        obstaculoItem->setPos(pos);
+        escena->addItem(obstaculoItem);
+        obstaculoItem->setData(0,"obstaculo");
+    }
+}
+*/
 void Render::añadirEnemigos()
 {
     /*
@@ -76,6 +91,22 @@ void Render::cargarEscenaNivel2()
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
+void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
+    QGraphicsPixmapItem* mensajeFinal;
+    if(vida <= 0){
+        QPixmap pixmap(":/sprites/GameOver.png");
+        pixmap = pixmap.scaled(400, 400, Qt::KeepAspectRatio);
+        mensajeFinal = new QGraphicsPixmapItem(pixmap);
+    }
+    else if(posicion.x() >= 1852){
+        QPixmap pixmap(":/sprites/LevelCompleted.png");
+        pixmap = pixmap.scaled(400, 400, Qt::KeepAspectRatio);
+        mensajeFinal = new QGraphicsPixmapItem(pixmap);
+    }
+    mensajeFinal->setPos((escena->width() - mensajeFinal->pixmap().width()) / 2, (escena->height() - mensajeFinal->pixmap().height()) / 2);
+    escena->addItem(mensajeFinal);
+    vista->graphicsView->centerOn(mensajeFinal);
+}
 
 
 

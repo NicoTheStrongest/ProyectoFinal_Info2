@@ -22,7 +22,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::actualizarPuntaje(short int nuevoPuntaje){
+    puntaje->setText("PTS " + QString::number(nuevoPuntaje));
+}
+
+void MainWindow::actualizarVida(short int nuevaVida){
+    vida->setText("LIFE " + QString::number(nuevaVida));
+}
+
 void MainWindow::actualizarVista(){
+    if(jugador->finalizarNivel()){
+        timer->stop();
+        jugador->parar();
+        enemigo->parar();
+        interfazPrincipal->mostrarMensajeFinal(jugador->getVida(),jugador->getPosicion());
+        return;
+    }
     ui->graphicsView->centerOn(jugador);
 }
 
@@ -41,8 +56,19 @@ void MainWindow::nivel1()
     interfazPrincipal->cargarEscenaNivel1();
 
     jugador = new Jugador(ui->graphicsView->scene());
+    enemigo = new Enemigo(ui->graphicsView->scene());
+    enemigo->cargarEnemigosNivel1(ui->graphicsView->scene());
+    puntaje = new QLabel("PTS 0", this);
+    puntaje->setGeometry(100, 90, 100, 30);
+    puntaje->show();
+    vida = new QLabel("LIFE 100", this);
+    vida->setGeometry(358, 90, 100, 30);
+    vida->show();
+    connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
+    connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
     ui->graphicsView->scene()->addItem(jugador);
     timer->start(16);
+
 }
 
 void MainWindow::nivel2()
