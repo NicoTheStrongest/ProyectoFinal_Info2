@@ -90,8 +90,6 @@ void Jugador::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->drawPixmap(-ancho/2,-alto/2,*pixmap,columnas,0,ancho, alto);
 }
 
-
-
 void Jugador::cambiarSprite()
 {
     columnas += 44;
@@ -137,6 +135,7 @@ void Jugador::keyPressEvent(QKeyEvent *event){
         saltar();
         break;
     }
+
     case Qt::Key_Escape:
     {
         //Aca se puede poner tambien el menu de opciones para volver o continuar
@@ -148,7 +147,6 @@ void Jugador::keyPressEvent(QKeyEvent *event){
     default:
         break;
     }
-
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
 
@@ -169,18 +167,6 @@ void Jugador::keyPressEvent(QKeyEvent *event){
             break;
         }
     }
-
-    /*
-    // Si colisiona con una pared, revertir el movimiento
-    if (colisionConPared) {
-        qDebug() << "Colisión detectada con una pared";
-        setPos(pos_original);  // Revertir el movimiento
-
-    } else {
-        // No hay colisión, permitir el movimiento
-        cambiarSprite();
-    }
-    */
 }
 
 void Jugador::aumentarPuntos(){
