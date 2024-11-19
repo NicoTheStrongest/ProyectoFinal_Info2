@@ -19,12 +19,20 @@ public:
     explicit Jugador(QObject *parent = nullptr);
     Jugador(QGraphicsScene* escena);
     QPoint getPosicion() const;
+    short int getPuntos() const;
+    short int getVida() const;
+    bool getControl() const;
+    bool finalizarNivel();
     void cargarPersonaje(QGraphicsScene *scene);
     void keyPressEvent(QKeyEvent *event);
     void moverAdelante();
     void moverAtras();
     void moverArriba();
     void moverAbajo();
+    void saltar();
+    void aumentarPuntos();
+    void disminuirVida();
+    void parar();
     void atacar();
 
     QRectF boundingRect() const;
@@ -32,13 +40,16 @@ public:
 
     float filas, columnas, ancho, alto;
 signals:
+    void puntajeCambiado(short int nuevoPuntaje);
+    void vidaCambio(short int nuevaVida);
 public slots:
     void cambiarSprite();
 private:
     QTimer* sprite;
     QPixmap* pixmap;
     QPoint posicion;
-    short int velocidad, direccionActual;
+    bool control;
+    short int velocidad, direccionActual, puntos, vida;
 
 };
 

@@ -5,7 +5,7 @@ Jugador::Jugador(QObject *parent)
 {}
 
 Jugador::Jugador(QGraphicsScene *escena)
-    : direccionActual(2), velocidad(2), posicion(20, 370)
+    : direccionActual(2), velocidad(2), posicion(20, 370), puntos(0), vida(100), control(true)
 {
     personaje::setEscenario(escena);
     setRect(0, 0, 44, 85);
@@ -27,10 +27,19 @@ Jugador::Jugador(QGraphicsScene *escena)
 }
 
 QPoint Jugador::getPosicion() const {return posicion;}
-
+short int Jugador::getPuntos() const {return puntos;}
+short int Jugador::getVida() const {return vida;}
+bool Jugador::getControl() const {return control;}
 void Jugador::cargarPersonaje(QGraphicsScene *scene){
     scene->addItem(this);
     setPos(posicion);
+}
+
+void Jugador::saltar(){
+    if(posicion.y() - 20 > 340){
+        posicion.setY(posicion.y() - 20);
+        setPos(posicion);
+    }
 }
 
 void Jugador::moverAdelante(){
@@ -38,7 +47,7 @@ void Jugador::moverAdelante(){
         posicion.setX(posicion.x() + velocidad);
         setPos(posicion);
         direccionActual = 0;
-        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x();
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
     }
 }
 
@@ -47,7 +56,7 @@ void Jugador::moverAtras(){
         posicion.setX(posicion.x() - velocidad);
         setPos(posicion);
         direccionActual = 1;
-        qDebug() << "Moviendo atrás, nueva posicion X:" << posicion.x();
+        qDebug() << "Moviendo atrás, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
     }
 }
 
@@ -57,7 +66,7 @@ void Jugador::moverArriba()
         posicion.setY(posicion.y() - velocidad);
         setPos(posicion);
         direccionActual = 0;
-        qDebug() << "Moviendo arriba, nueva posicion X:" << posicion.x();
+        qDebug() << "Moviendo arriba, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
     }
 }
 
@@ -67,7 +76,7 @@ void Jugador::moverAbajo()
         posicion.setY(posicion.y() + velocidad);
         setPos(posicion);
         direccionActual = 0;
-        qDebug() << "Moviendo abajo, nueva posicion X:" << posicion.x();
+        qDebug() << "Moviendo abajo, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
     }
 }
 
@@ -81,8 +90,6 @@ void Jugador::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     painter->drawPixmap(-ancho/2,-alto/2,*pixmap,columnas,0,ancho, alto);
 }
 
-
-
 void Jugador::cambiarSprite()
 {
     columnas += 44;
@@ -92,7 +99,12 @@ void Jugador::cambiarSprite()
     this->update(-ancho/2,-alto/2,ancho,alto);
 }
 
+void Jugador::parar(){
+    control = false;
+}
+
 void Jugador::keyPressEvent(QKeyEvent *event){
+    if(!getControl()){return;}
     switch(event->key()){
     case Qt::Key_Left:
     case  Qt::Key_A:
@@ -118,6 +130,12 @@ void Jugador::keyPressEvent(QKeyEvent *event){
         moverAbajo();
         break;
     }
+    case Qt::Key_Space:
+    {
+        saltar();
+        break;
+    }
+
     case Qt::Key_Escape:
     {
         //Aca se puede poner tambien el menu de opciones para volver o continuar
@@ -129,27 +147,46 @@ void Jugador::keyPressEvent(QKeyEvent *event){
     default:
         break;
     }
-
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
 
     for (QGraphicsItem* item : colisiones) {
         if (item->data(0).toString() == "basura") {
-            item->setOpacity(0); // se hacen visibles las pareced
+            if(item->data(1).toBool() == false){
+                item->setOpacity(0); // se hacen visibles las pareced
+                item->setData(1,true);
+                aumentarPuntos();
+                break;
+            }
+        }
+        else if(item->data(0).toString() == "enemigo"){
+            posicion.setY(posicion.y() - velocidad * 4);
+            posicion.setX(posicion.x() - velocidad * 4);
+            setPos(posicion);
+            disminuirVida();
             break;
         }
     }
-
-    /*
-    // Si colisiona con una pared, revertir el movimiento
-    if (colisionConPared) {
-        qDebug() << "Colisión detectada con una pared";
-        setPos(pos_original);  // Revertir el movimiento
-
-    } else {
-        // No hay colisión, permitir el movimiento
-        cambiarSprite();
-    }
-    */
 }
 
+void Jugador::aumentarPuntos(){
+    puntos += 25;
+    emit puntajeCambiado(puntos);
+}
+
+void Jugador::disminuirVida(){
+    if (vida > 0){
+        vida -= 10;
+        emit vidaCambio(vida);
+    }
+}
+
+bool Jugador::finalizarNivel(){
+    if(posicion.x() >= 1852 && puntos == 100){
+        return true;
+    }
+    else if(vida <= 0){
+        return true;
+    }
+    return false;
+}
