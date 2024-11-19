@@ -14,9 +14,8 @@ SOURCES += \
     jugador.cpp \
     main.cpp \
     mainwindow.cpp \
-    mapa.cpp \
-    menu.cpp \
     personaje.cpp \
+    render.cpp \
     sprites.cpp
 
 HEADERS += \
@@ -24,9 +23,8 @@ HEADERS += \
     fisicas.h \
     jugador.h \
     mainwindow.h \
-    mapa.h \
-    menu.h \
     personaje.h \
+    render.h \
     sprites.h
 
 FORMS += \

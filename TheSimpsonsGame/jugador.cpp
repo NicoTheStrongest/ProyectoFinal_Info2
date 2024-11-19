@@ -1,12 +1,29 @@
 #include "jugador.h"
 
 Jugador::Jugador(QObject *parent)
-    : personaje{parent}, direccionActual(2), velocidad(2), posicion(0, 370)
+    : personaje{parent}
+{}
+
+Jugador::Jugador(QGraphicsScene *escena)
+    : direccionActual(2), velocidad(2), posicion(20, 370)
 {
-    setRect(0, 0, 20, 20);
-    setBrush(QBrush(Qt::yellow));
+    personaje::setEscenario(escena);
+    setRect(0, 0, 44, 85);
+    //setBrush(QBrush(Qt::yellow));
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
+    setPos(posicion);
+
+    sprite = new QTimer();
+    connect(sprite, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
+    sprite->start(500);
+    filas = 0;
+    columnas = 83;
+    pixmap = new QPixmap(":/sprites/Homer.png");
+    QColor colorVerde(25, 255, 95);
+    pixmap->setMask(pixmap->createMaskFromColor(colorVerde.rgb(), Qt::MaskInColor));
+    ancho = 44;
+    alto = 85;
 }
 
 QPoint Jugador::getPosicion() const {return posicion;}
@@ -17,57 +34,122 @@ void Jugador::cargarPersonaje(QGraphicsScene *scene){
 }
 
 void Jugador::moverAdelante(){
-    posicion.setX(posicion.x() + velocidad);
-    setPos(posicion);
-    direccionActual = 0;
-    qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x();
+    if(posicion.x() + velocidad < 1854){
+        posicion.setX(posicion.x() + velocidad);
+        setPos(posicion);
+        direccionActual = 0;
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x();
+    }
 }
 
 void Jugador::moverAtras(){
-    posicion.setX(posicion.x() - velocidad);
-    setPos(posicion);
-    direccionActual = 1;
-     qDebug() << "Moviendo atrás, nueva posicion X:" << posicion.x();
+    if(posicion.x() - velocidad > 0){
+        posicion.setX(posicion.x() - velocidad);
+        setPos(posicion);
+        direccionActual = 1;
+        qDebug() << "Moviendo atrás, nueva posicion X:" << posicion.x();
+    }
 }
+
+void Jugador::moverArriba()
+{
+    if(posicion.y() - velocidad > 340){
+        posicion.setY(posicion.y() - velocidad);
+        setPos(posicion);
+        direccionActual = 0;
+        qDebug() << "Moviendo arriba, nueva posicion X:" << posicion.x();
+    }
+}
+
+void Jugador::moverAbajo()
+{
+    if(posicion.y() + velocidad < 480){
+        posicion.setY(posicion.y() + velocidad);
+        setPos(posicion);
+        direccionActual = 0;
+        qDebug() << "Moviendo abajo, nueva posicion X:" << posicion.x();
+    }
+}
+
+QRectF Jugador::boundingRect() const
+{
+    return QRectF(-ancho/2,-alto/2,ancho,alto);
+}
+
+void Jugador::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->drawPixmap(-ancho/2,-alto/2,*pixmap,columnas,0,ancho, alto);
+}
+
+
+
+void Jugador::cambiarSprite()
+{
+    columnas += 44;
+    if(columnas>=435){
+        columnas = 83;
+    }
+    this->update(-ancho/2,-alto/2,ancho,alto);
+}
+
 void Jugador::keyPressEvent(QKeyEvent *event){
     switch(event->key()){
     case Qt::Key_Left:
-    {
-        moverAtras();
-        break;
-    }
     case  Qt::Key_A:
     {
         moverAtras();
         break;
     }
     case Qt::Key_Right:
-    {
-        moverAdelante();
-        break;
-    }
     case Qt::Key_D:
     {
         moverAdelante();
         break;
     }
+    case Qt::Key_Up:
+    case Qt::Key_W:
+    {
+        moverArriba();
+        break;
+    }
+    case Qt::Key_Down:
+    case Qt::Key_S:
+    {
+        moverAbajo();
+        break;
+    }
+    case Qt::Key_Escape:
+    {
+        //Aca se puede poner tambien el menu de opciones para volver o continuar
+
+        qDebug() << "Se presionó ESC. Cerrando la aplicación...";
+        QApplication::quit();  // Cerrar la aplicación
+    }
+        return;
     default:
         break;
     }
-}
 
+    // Verificar si colisiona con algún objeto etiquetado como "pared"
+    QList<QGraphicsItem*> colisiones = collidingItems();
 
-void Jugador::moverEndireccionActual(){
-    switch(direccionActual){
-    case 0:
-        moverAdelante();
-        break;
-    case 1:
-        moverAtras();
-        break;
-    default:
-        break;
+    for (QGraphicsItem* item : colisiones) {
+        if (item->data(0).toString() == "basura") {
+            item->setOpacity(0); // se hacen visibles las pareced
+            break;
+        }
     }
-}
 
+    /*
+    // Si colisiona con una pared, revertir el movimiento
+    if (colisionConPared) {
+        qDebug() << "Colisión detectada con una pared";
+        setPos(pos_original);  // Revertir el movimiento
+
+    } else {
+        // No hay colisión, permitir el movimiento
+        cambiarSprite();
+    }
+    */
+}
 
