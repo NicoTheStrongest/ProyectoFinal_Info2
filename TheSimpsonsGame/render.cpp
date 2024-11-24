@@ -1,4 +1,5 @@
 #include "render.h"
+#include <QPushButton>
 
 Render::Render(QObject *parent)
     : QObject{parent}
@@ -91,20 +92,42 @@ void Render::cargarEscenaNivel2()
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
+void Render::volverAlMenuPrincipal(){
+    if (escena) {
+        delete escena;
+    }
+    escena = new QGraphicsScene;
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    escena->addItem(fondo);
+    vista->graphicsView->setScene(escena);
+    vista->botonNivel1->setVisible(true);
+    vista->botonNivel2->setVisible(true);
+    vista->botonSalir->setVisible(true);
+}
+
 void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     QGraphicsPixmapItem* mensajeFinal;
+    QPixmap pixmapVolver(":/sprites/Atras.png");
+    QGraphicsPixmapItem* volver = new QGraphicsPixmapItem(pixmapVolver);
     if(vida <= 0){
         QPixmap pixmap(":/sprites/GameOver.png");
-        pixmap = pixmap.scaled(400, 400, Qt::KeepAspectRatio);
+        pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
     else if(posicion.x() >= 1852){
         QPixmap pixmap(":/sprites/LevelCompleted.png");
-        pixmap = pixmap.scaled(400, 400, Qt::KeepAspectRatio);
+        pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
     mensajeFinal->setPos((escena->width() - mensajeFinal->pixmap().width()) / 2, (escena->height() - mensajeFinal->pixmap().height()) / 2);
+    int mensajeFinalX = (escena->width() - mensajeFinal->pixmap().width()) / 2;
+    int mensajeFinalY = (escena->height() - mensajeFinal->pixmap().height()) / 2;
+    volver->setPos(mensajeFinalX + (mensajeFinal->pixmap().width() - volver->pixmap().width()) / 2, mensajeFinalY + mensajeFinal->pixmap().height() + 20);
+    vista->botonAtras->setGeometry(volver->x(), volver->y(), volver->pixmap().width(), volver->pixmap().height());
+    vista->botonAtras->setVisible(true);
     escena->addItem(mensajeFinal);
+    escena->addItem(volver);
+    connect(vista->botonAtras, &QPushButton::clicked, this, &Render::volverAlMenuPrincipal);
     vista->graphicsView->centerOn(mensajeFinal);
 }
 

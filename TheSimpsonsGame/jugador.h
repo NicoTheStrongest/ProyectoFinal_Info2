@@ -39,11 +39,14 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
     float filas, columnas, ancho, alto;
+
 signals:
     void puntajeCambiado(short int nuevoPuntaje);
     void vidaCambio(short int nuevaVida);
+
 public slots:
     void cambiarSprite();
+
 private:
     QTimer* sprite;
     QPixmap* pixmap;

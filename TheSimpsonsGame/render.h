@@ -31,11 +31,16 @@ public:
     void añadirObstaculos();
     void cargarEscenaNivel2();
     void mostrarMensajeFinal(short int vida, QPoint posicion);
+
+public slots:
+    void volverAlMenuPrincipal();
+
 signals:
 private:
     Ui::MainWindow* vista;
     QLabel* puntaje;
     QLabel* vida;
+    QPushButton* atras;
 };
 
 #endif // RENDER_H
