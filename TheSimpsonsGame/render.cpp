@@ -60,6 +60,7 @@ void Render::añadirObstaculos(){
     }
 }
 */
+
 void Render::añadirEnemigos()
 {
     /*

@@ -38,8 +38,6 @@ void MainWindow::actualizarVista(){
         interfazPrincipal->mostrarMensajeFinal(jugador->getVida(),jugador->getPosicion());
         return;
     }
-    ui->graphicsView->centerOn(jugador);
-}
 
 void MainWindow::conectarBotones()
 {
@@ -68,7 +66,6 @@ void MainWindow::nivel1()
     connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
     ui->graphicsView->scene()->addItem(jugador);
     timer->start(16);
-
 }
 
 void MainWindow::nivel2()
