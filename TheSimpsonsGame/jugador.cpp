@@ -149,8 +149,9 @@ void Jugador::keyPressEvent(QKeyEvent *event){
     }
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
-
+    qDebug() << "Cantidad de colisiones detectadas:" << colisiones.size();
     for (QGraphicsItem* item : colisiones) {
+        qDebug() << "Elemento en colisión, data(0):" << item->data(0).toString();
         if (item->data(0).toString() == "basura") {
             if(item->data(1).toBool() == false){
                 item->setOpacity(0); // se hacen visibles las pareced
@@ -160,8 +161,9 @@ void Jugador::keyPressEvent(QKeyEvent *event){
             }
         }
         else if(item->data(0).toString() == "enemigo"){
-            posicion.setY(posicion.y() - velocidad * 4);
-            posicion.setX(posicion.x() - velocidad * 4);
+            qDebug() << "colision enemigo";
+            posicion.setY(posicion.y() - velocidad * 6);
+            posicion.setX(posicion.x() - velocidad * 6);
             setPos(posicion);
             disminuirVida();
             break;
