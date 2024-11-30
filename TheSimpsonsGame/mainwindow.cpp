@@ -66,12 +66,11 @@ void MainWindow::conectarBotones()
 
 void MainWindow::nivel1()
 {
-    this->nivel = 1;
+    nivel = 1;
     interfazPrincipal->cargarEscenaNivel1();
     qDebug() << "Escena cargada";
     menuPrincipal = false;
-    nivel = 1;
-    jugador = new Jugador(ui->graphicsView->scene());
+    jugador = new Jugador(ui->graphicsView->scene(), nivel);
     ui->graphicsView->scene()->addItem(jugador);
     qDebug() << "jugador cargado";
     enemigo = new Enemigo(ui->graphicsView->scene());
@@ -94,12 +93,10 @@ void MainWindow::nivel1()
 
 void MainWindow::nivel2()
 {
-    this->nivel = 2;
-    interfazPrincipal->cargarEscenaNivel2();
-
-    menuPrincipal = false;
     nivel = 2;
-    jugador = new Jugador(ui->graphicsView->scene());
+    interfazPrincipal->cargarEscenaNivel2();
+    menuPrincipal = false;
+    jugador = new Jugador(ui->graphicsView->scene(), nivel);
     ui->graphicsView->scene()->addItem(jugador);
     puntaje = new QLabel("PTS 0", this);
     puntaje->setGeometry(100, 90, 100, 30);

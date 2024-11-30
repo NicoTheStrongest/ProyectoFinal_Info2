@@ -17,7 +17,7 @@ class Jugador : public personaje, public QGraphicsRectItem
     Q_OBJECT
 public:
     explicit Jugador(QObject *parent = nullptr);
-    Jugador(QGraphicsScene* escena);
+    Jugador(QGraphicsScene* escena, int nivel);
     QPoint getPosicion() const;
     short int getPuntos() const;
     short int getVida() const;

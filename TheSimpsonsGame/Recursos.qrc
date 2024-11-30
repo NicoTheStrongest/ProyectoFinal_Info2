@@ -13,6 +13,5 @@
         <file>sprites/GameOver.png</file>
         <file>sprites/LevelCompleted.png</file>
         <file>sprites/Atras.png</file>
-        <file>sprites/Escenario2Plataformas.jpeg</file>
     </qresource>
 </RCC>

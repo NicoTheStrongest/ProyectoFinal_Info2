@@ -4,8 +4,8 @@ Jugador::Jugador(QObject *parent)
     : personaje{parent}
 {}
 
-Jugador::Jugador(QGraphicsScene *escena)
-    : direccionActual(2), velocidad(2), puntos(0), vida(100), control(true)
+Jugador::Jugador(QGraphicsScene *escena, int nivel)
+    : direccionActual(2), velocidad(2), puntos(0), vida(100), nivelActual(nivel)
 {
     personaje::setEscenario(escena);
     setRect(0, 0, 44, 64);
@@ -15,8 +15,6 @@ Jugador::Jugador(QGraphicsScene *escena)
 
     mover = new QTimer();
     connect(mover, SIGNAL(timeout()), this, SLOT(aplicarGravedad()));
-
-    nivelActual = 2;
     if (nivelActual == 1){
         posicion = QPoint(20, 370);
         pixmap = new QPixmap(":/sprites/Homer.png");
