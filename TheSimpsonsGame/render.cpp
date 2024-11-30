@@ -5,16 +5,15 @@ Render::Render(QObject *parent)
     : QObject{parent}
 {}
 
-Render::Render(Ui::MainWindow *ui) : vista(ui)
-{
+Render::Render(Ui::MainWindow *ui) : vista(ui){
     escena = new QGraphicsScene;
     fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
     escena->addItem(fondo);
     vista->graphicsView->setScene(escena);
+    vista->botonAtras->setVisible(false);
 }
 
-void Render::cargarEscenaNivel1()
-{
+void Render::cargarEscenaNivel1(){
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
     vista->botonSalir->setVisible(false);
@@ -25,16 +24,11 @@ void Render::cargarEscenaNivel1()
     escena->addItem(fondo);
     //añadimos basura
     añadirBasura();
-    //Añadimos obstaculos
-    //añadirObstaculos();
-    //añadirEnemigos
-    //añadirEnemigos();
     vista->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-void Render::añadirBasura()
-{
+void Render::añadirBasura(){
     QPixmap basuraPixmap(":/sprites/Bassura.png");
     QPixmap scaledBasuraPixmap = basuraPixmap.scaled(40, 40, Qt::KeepAspectRatio);
 
@@ -61,36 +55,41 @@ void Render::añadirObstaculos(){
 }
 */
 
-void Render::añadirEnemigos()
-{
-    /*
-    QString enemigo1 = "";
-    QString enemigo1 = "";
-    QString enemigo1 = "";
-    QString enemigo1 = "";
-    */
-    QPixmap basuraPixmap(":/sprites/Bassura.png");
-    QPixmap scaledBasuraPixmap = basuraPixmap.scaled(40, 40, Qt::KeepAspectRatio);
-
-    for (int i = 0; i < 4; ++i) {
-        QGraphicsPixmapItem *basuraItem = new QGraphicsPixmapItem(scaledBasuraPixmap);
-        if(i%2==0){basuraItem->setPos(400 * (i+1), 453);}
-        else{basuraItem->setPos(400 * (i+1), 372);}
-        escena->addItem(basuraItem);
-    }
-}
-
-void Render::cargarEscenaNivel2()
-{
+void Render::cargarEscenaNivel2(){
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
     vista->botonSalir->setVisible(false);
     escena = new QGraphicsScene;
-    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/Escenario2.jpeg").scaled(1000, 1000, Qt::KeepAspectRatio));
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/Escenario2.jpeg"));
     escena->addItem(fondo);
+    añadirPlataformas();
     vista->graphicsView->setScene(escena);
     vista->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     vista->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+}
+
+void Render::añadirPlataformas(){
+    QList<QRect> areasOcupadas = {
+        QRect(100, 543, 680, 20),
+        QRect(220, 440, 560, 20),
+        QRect(100, 340, 20, 223),
+        QRect(120, 340, 380, 20),
+        QRect(220, 340, 460, 20),
+        QRect(780, 220, 20, 343),
+        QRect(200, 220, 580, 20),
+        QRect(200, 220, 20, 120)
+    };
+
+    for (const QRect& area : areasOcupadas) {
+        dibujarPared(area.x(), area.y(), area.width(), area.height(),QColorConstants::Black);
+    }
+}
+
+void Render:: dibujarPared(int x, int y, int ancho, int alto, QColor color) {
+    QGraphicsRectItem* pared = new QGraphicsRectItem(x, y, ancho, alto);
+    pared->setBrush(QBrush(QColor(color)));
+    escena->addItem(pared);
+    pared->setData(0, "plataforma");
 }
 
 void Render::volverAlMenuPrincipal(){

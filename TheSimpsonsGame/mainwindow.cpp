@@ -11,15 +11,17 @@ MainWindow::MainWindow(QWidget *parent)
     //Conectar botones y crear render para manipulacion de escenarios
     interfazPrincipal = new Render(ui);
     conectarBotones();
-    ui->graphicsView->setFocus();
+    //ui->graphicsView->setFocus();
     ui->graphicsView->show();
-
+    //this->setFocus();
+    this->setFocusPolicy(Qt::StrongFocus);
 }
 
 MainWindow::~MainWindow()
 {
     delete interfazPrincipal;
     delete ui;
+    delete timer;
 }
 
 void MainWindow::actualizarPuntaje(short int nuevoPuntaje){
@@ -38,6 +40,8 @@ void MainWindow::actualizarVista(){
         interfazPrincipal->mostrarMensajeFinal(jugador->getVida(),jugador->getPosicion());
         return;
     }
+    ui->graphicsView->centerOn(jugador);
+}
 
 void MainWindow::conectarBotones()
 {
@@ -51,8 +55,8 @@ void MainWindow::conectarBotones()
 
 void MainWindow::nivel1()
 {
+    this->nivel = 1;
     interfazPrincipal->cargarEscenaNivel1();
-
     jugador = new Jugador(ui->graphicsView->scene());
     enemigo = new Enemigo(ui->graphicsView->scene());
     enemigo->cargarEnemigosNivel1(ui->graphicsView->scene());
@@ -70,14 +74,24 @@ void MainWindow::nivel1()
 
 void MainWindow::nivel2()
 {
+    this->nivel = 2;
     interfazPrincipal->cargarEscenaNivel2();
     jugador = new Jugador(ui->graphicsView->scene());
     ui->graphicsView->scene()->addItem(jugador);
-    //timer->start(16);
+    timer->start(16);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
-    jugador->keyPressEvent(event);
+    if(event->key() == Qt::Key_Escape){
+        QApplication::quit();  // Cerrar la aplicación
+    }
+    else {
+        if(this->nivel == 1){
+            jugador->keyPressEvent(event);
+            qDebug() << "hola";
+        }
+        if(this->nivel == 2){jugador->movimientoNivel2(event);}
+    }
 }
 
 
