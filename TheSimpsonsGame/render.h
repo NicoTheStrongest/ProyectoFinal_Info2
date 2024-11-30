@@ -23,15 +23,26 @@ public:
 
     QGraphicsScene* escena;
     QGraphicsPixmapItem* fondo;
-
     int elegirOpcion();
     void cargarEscenaNivel1();
     void añadirBasura();
     void añadirEnemigos();
+    void añadirObstaculos();
     void cargarEscenaNivel2();
+    void añadirPlataformas();
+    void dibujarPared(int x, int y, int ancho, int alto, QColor color);
+    void mostrarMensajeFinal(short int vida, QPoint posicion);
+
+public slots:
+    void volverAlMenuPrincipal();
+
 signals:
+
 private:
     Ui::MainWindow* vista;
+    QLabel* puntaje;
+    QLabel* vida;
+
 };
 
 #endif // RENDER_H

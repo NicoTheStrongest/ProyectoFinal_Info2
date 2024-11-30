@@ -2,14 +2,19 @@
 #define FISICAS_H
 
 #include <QObject>
+#include <Qpoint>
+#include <QGraphicsItem>
+#include <QDebug>
+#include <QTimer>
 
-class fisicas : public QObject
+class Fisicas : public QObject
 {
     Q_OBJECT
 public:
-    explicit fisicas(QObject *parent = nullptr);
-
-signals:
+    explicit Fisicas(QObject *parent = nullptr);
+    void aplicarGravedad(QPoint &posicion, int velocidadDefecto);
+private:
+    float gravedad, velocidad;
 };
 
 #endif // FISICAS_H

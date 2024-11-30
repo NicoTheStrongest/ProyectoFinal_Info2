@@ -10,5 +10,8 @@
         <file>sprites/MovimientoHomero.png</file>
         <file>sprites/NPC1.png</file>
         <file>sprites/NPC2.png</file>
+        <file>sprites/GameOver.png</file>
+        <file>sprites/LevelCompleted.png</file>
+        <file>sprites/Atras.png</file>
     </qresource>
 </RCC>

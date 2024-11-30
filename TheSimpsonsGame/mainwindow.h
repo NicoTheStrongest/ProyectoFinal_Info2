@@ -25,19 +25,25 @@ class MainWindow : public QMainWindow
 public:
     QGraphicsScene* scene;
     Render* interfazPrincipal;
-    short int nivel;
-
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void conectarBotones();
-    void keyPressEvent(QKeyEvent *event);
+    void eliminarNivel();
+    void keyPressEvent(QKeyEvent *event) override;
 public slots:
     void actualizarVista();
+    void actualizarPuntaje(short int nuevoPuntaje);
+    void actualizarVida(short int nuevaVida);
     void nivel1();
     void nivel2();
 private:
     Ui::MainWindow *ui;
     Jugador* jugador;
+    Enemigo* enemigo;
+    QLabel* puntaje;
+    QLabel* vida;
     QTimer* timer;
+    bool menuPrincipal;
+    short int nivel;
 };
 #endif // MAINWINDOW_H

@@ -10,7 +10,6 @@
 #include <QKeyEvent>
 
 #include "sprites.h"
-#include "fisicas.h"
 
 class personaje : public QObject
 {
@@ -22,6 +21,7 @@ public:
     explicit personaje(QObject *parent = nullptr);
 
     void setEscenario(QGraphicsScene* newEscenario);
+    void gravedad(QPoint posicionActual, bool enPlataforma);
 
     short int getVida() const;
     unsigned int getAncho() const;
