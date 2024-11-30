@@ -116,8 +116,8 @@
    <widget class="QPushButton" name="botonAtras">
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>300</y>
+      <x>250</x>
+      <y>460</y>
       <width>95</width>
       <height>41</height>
      </rect>
