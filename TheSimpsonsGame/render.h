@@ -29,6 +29,8 @@ public:
     void añadirEnemigos();
     void añadirObstaculos();
     void cargarEscenaNivel2();
+    void añadirPlataformas();
+    void dibujarPared(int x, int y, int ancho, int alto, QColor color);
     void mostrarMensajeFinal(short int vida, QPoint posicion);
 
 public slots:

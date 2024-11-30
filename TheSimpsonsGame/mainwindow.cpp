@@ -13,15 +13,17 @@ MainWindow::MainWindow(QWidget *parent)
     //Conectar botones y crear render para manipulacion de escenarios
     interfazPrincipal = new Render(ui);
     conectarBotones();
-    ui->graphicsView->setFocus();
+    //ui->graphicsView->setFocus();
     ui->graphicsView->show();
-
+    //this->setFocus();
+    this->setFocusPolicy(Qt::StrongFocus);
 }
 
 MainWindow::~MainWindow()
 {
     delete interfazPrincipal;
     delete ui;
+    delete timer;
 }
 
 void MainWindow::actualizarPuntaje(short int nuevoPuntaje){
@@ -40,6 +42,7 @@ void MainWindow::actualizarVista(){
     }
     ui->graphicsView->centerOn(jugador);
 }
+
 void MainWindow::conectarBotones()
 {
     connect(ui->botonNivel1, &QPushButton::clicked, this, &MainWindow::nivel1);
@@ -63,6 +66,7 @@ void MainWindow::conectarBotones()
 
 void MainWindow::nivel1()
 {
+    this->nivel = 1;
     interfazPrincipal->cargarEscenaNivel1();
     qDebug() << "Escena cargada";
     menuPrincipal = false;
@@ -90,6 +94,7 @@ void MainWindow::nivel1()
 
 void MainWindow::nivel2()
 {
+    this->nivel = 2;
     interfazPrincipal->cargarEscenaNivel2();
 
     menuPrincipal = false;
@@ -142,7 +147,6 @@ void MainWindow::eliminarNivel(){
     }
 
     qDebug() << "Nivel liberado.";
-
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event){
@@ -163,8 +167,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
             event->accept();
         }
     }
-    else{
-        jugador->keyPressEvent(event);
+    else {
+        if(this->nivel == 1){
+            jugador->keyPressEvent(event);
+            qDebug() << "hola";
+        }
+        if(this->nivel == 2){jugador->movimientoNivel2(event);}
     }
 }
 
