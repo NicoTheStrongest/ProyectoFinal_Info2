@@ -123,7 +123,7 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
     else if(posicion.x() >= 1852 && posicion.y() >= 340 && posicion.y() <= 480){
-        qDebug() << "Nivel completado";
+        qDebug() << "Nivel completo";
         QPixmap pixmap(":/sprites/LevelCompleted.png");
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
