@@ -23,7 +23,6 @@ public:
 
     QGraphicsScene* escena;
     QGraphicsPixmapItem* fondo;
-
     int elegirOpcion();
     void cargarEscenaNivel1();
     void añadirBasura();
@@ -36,11 +35,12 @@ public slots:
     void volverAlMenuPrincipal();
 
 signals:
+
 private:
     Ui::MainWindow* vista;
     QLabel* puntaje;
     QLabel* vida;
-    QPushButton* atras;
+
 };
 
 #endif // RENDER_H

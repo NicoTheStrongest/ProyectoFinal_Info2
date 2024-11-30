@@ -104,7 +104,12 @@ void Jugador::parar(){
 }
 
 void Jugador::keyPressEvent(QKeyEvent *event){
-    if(!getControl()){return;}
+    qDebug() << "tecla presionada desde jugador";
+    if (event->key() == Qt::Key_Escape) {
+        event->ignore();
+        return;
+    }
+
     switch(event->key()){
     case Qt::Key_Left:
     case  Qt::Key_A:
@@ -135,24 +140,16 @@ void Jugador::keyPressEvent(QKeyEvent *event){
         saltar();
         break;
     }
-
-    case Qt::Key_Escape:
-    {
-        //Aca se puede poner tambien el menu de opciones para volver o continuar
-
-        qDebug() << "Se presionó ESC. Cerrando la aplicación...";
-        QApplication::quit();  // Cerrar la aplicación
-    }
-        return;
     default:
         break;
     }
+
+
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
-    qDebug() << "Cantidad de colisiones detectadas:" << colisiones.size();
     for (QGraphicsItem* item : colisiones) {
-        qDebug() << "Elemento en colisión, data(0):" << item->data(0).toString();
         if (item->data(0).toString() == "basura") {
+            qDebug() << "colision basura";
             if(item->data(1).toBool() == false){
                 item->setOpacity(0); // se hacen visibles las pareced
                 item->setData(1,true);
@@ -162,14 +159,22 @@ void Jugador::keyPressEvent(QKeyEvent *event){
         }
         else if(item->data(0).toString() == "enemigo"){
             qDebug() << "colision enemigo";
-            posicion.setY(posicion.y() - velocidad * 6);
-            posicion.setX(posicion.x() - velocidad * 6);
-            setPos(posicion);
+            if((posicion.y() - (velocidad * 6) < 340) || (posicion.y() - (velocidad * 6) > 480)){
+                posicion.setX(posicion.x() - velocidad * 6);
+                setPos(posicion);
+            }
+            else{
+                posicion.setY(posicion.y() - velocidad * 6);
+                posicion.setX(posicion.x() - velocidad * 6);
+                setPos(posicion);
+            }
             disminuirVida();
             break;
         }
     }
 }
+
+
 
 void Jugador::aumentarPuntos(){
     puntos += 25;
