@@ -1,4 +1,5 @@
 #include "render.h"
+#include <QGraphicsProxyWidget>
 #include <QPushButton>
 
 Render::Render(QObject *parent)
@@ -94,7 +95,8 @@ void Render:: dibujarPared(int x, int y, int ancho, int alto, QColor color) {
 
 void Render::volverAlMenuPrincipal(){
     if (escena) {
-        delete escena;
+        escena->clear();
+        qDebug() << "escena limpia";
     }
     escena = new QGraphicsScene;
     fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
@@ -103,6 +105,8 @@ void Render::volverAlMenuPrincipal(){
     vista->botonNivel1->setVisible(true);
     vista->botonNivel2->setVisible(true);
     vista->botonSalir->setVisible(true);
+    vista->botonAtras->setVisible(false);
+    qDebug() << "De vuelta en el menu principal";
 }
 
 void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
@@ -110,24 +114,30 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     QPixmap pixmapVolver(":/sprites/Atras.png");
     QGraphicsPixmapItem* volver = new QGraphicsPixmapItem(pixmapVolver);
     if(vida <= 0){
+        qDebug() << "Nivel perdido";
         QPixmap pixmap(":/sprites/GameOver.png");
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
-    else if(posicion.x() >= 1852){
+    else if(posicion.x() >= 1852 && posicion.y() >= 340 && posicion.y() <= 480){
+        qDebug() << "Nivel completo";
         QPixmap pixmap(":/sprites/LevelCompleted.png");
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
+
     mensajeFinal->setPos((escena->width() - mensajeFinal->pixmap().width()) / 2, (escena->height() - mensajeFinal->pixmap().height()) / 2);
+
     int mensajeFinalX = (escena->width() - mensajeFinal->pixmap().width()) / 2;
     int mensajeFinalY = (escena->height() - mensajeFinal->pixmap().height()) / 2;
     volver->setPos(mensajeFinalX + (mensajeFinal->pixmap().width() - volver->pixmap().width()) / 2, mensajeFinalY + mensajeFinal->pixmap().height() + 20);
-    vista->botonAtras->setGeometry(volver->x(), volver->y(), volver->pixmap().width(), volver->pixmap().height());
+
+    //vista->botonAtras->setGeometry(volver->x(), volver->y(), volver->pixmap().width(), volver->pixmap().height());
     vista->botonAtras->setVisible(true);
+    qDebug() << "boton agregado a la escena" << "posicion " << vista->botonAtras->pos();
+
     escena->addItem(mensajeFinal);
     escena->addItem(volver);
-    connect(vista->botonAtras, &QPushButton::clicked, this, &Render::volverAlMenuPrincipal);
     vista->graphicsView->centerOn(mensajeFinal);
 }
 
