@@ -5,17 +5,20 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    ui->setupUi(this);
+
+    //CONFIGURACION DE MENU PRINCIPAL (REDER PARA MANIPULACION DE ESCENARIOS)
     menuPrincipal = true;
     nivel = 0;
-    ui->setupUi(this);
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(actualizarVista()));
-    //Conectar botones y crear render para manipulacion de escenarios
     interfazPrincipal = new Render(ui);
     conectarBotones();
-    //ui->graphicsView->setFocus();
+
+    //TIMER PARA SEGUIR PERSONAJE
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizarVista()));
+
+    //MONTAR ESCENA Y SETTEAR EL FOCUS
     ui->graphicsView->show();
-    //this->setFocus();
     this->setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -26,25 +29,8 @@ MainWindow::~MainWindow()
     delete timer;
 }
 
-void MainWindow::actualizarPuntaje(short int nuevoPuntaje){
-    puntaje->setText("PTS " + QString::number(nuevoPuntaje));
-}
-
-void MainWindow::actualizarVida(short int nuevaVida){
-    vida->setText("LIFE " + QString::number(nuevaVida));
-}
-
-void MainWindow::actualizarVista(){
-    if(jugador->finalizarNivel()){
-        timer->stop();
-        interfazPrincipal->mostrarMensajeFinal(jugador->getVida(),jugador->getPosicion());
-        return;
-    }
-    ui->graphicsView->centerOn(jugador);
-}
-
-void MainWindow::conectarBotones()
-{
+//-------------------METODOS--------------------------
+void MainWindow::conectarBotones(){
     connect(ui->botonNivel1, &QPushButton::clicked, this, &MainWindow::nivel1);
     connect(ui->botonNivel2, &QPushButton::clicked, this, &MainWindow::nivel2);
     connect(ui->botonSalir, &QPushButton::clicked, this, [](){
@@ -53,6 +39,7 @@ void MainWindow::conectarBotones()
     });
     connect(ui->botonAtras, &QPushButton::clicked, this, [this](){
         qDebug() << "Botón atras presionado";
+        enemigo->detenerRotacion();
         interfazPrincipal->volverAlMenuPrincipal();
         puntaje->setVisible(false);
         delete puntaje;
@@ -60,62 +47,7 @@ void MainWindow::conectarBotones()
         vida->setVisible(false);
         delete vida;
         vida = nullptr;
-
     });
-}
-
-void MainWindow::nivel1()
-{
-    nivel = 1;
-    interfazPrincipal->cargarEscenaNivel1();
-    qDebug() << "Escena cargada";
-    menuPrincipal = false;
-    jugador = new Jugador(ui->graphicsView->scene(), nivel);
-    ui->graphicsView->scene()->addItem(jugador);
-    qDebug() << "jugador cargado";
-    enemigo = new Enemigo(ui->graphicsView->scene());
-    enemigo->cargarEnemigosNivel1(ui->graphicsView->scene());
-    qDebug() << "enemigos cargados";
-    puntaje = new QLabel("PTS 0", this);
-    puntaje->setGeometry(100, 90, 100, 30);
-    puntaje->show();
-    qDebug() << "puntaje cargado";
-    vida = new QLabel("LIFE 100", this);
-    vida->setGeometry(358, 90, 100, 30);
-    vida->show();
-    qDebug() << "vida cargada";
-    connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
-    connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
-    timer->start(16);
-    qDebug() << "timer iniciado";
-    qDebug() << "Nivel 1 cargado sin errores";
-}
-
-void MainWindow::nivel2()
-{
-    nivel = 2;
-    interfazPrincipal->cargarEscenaNivel2();
-    qDebug() << "Escena cargada";
-    menuPrincipal = false;
-    jugador = new Jugador(ui->graphicsView->scene(), nivel);
-    ui->graphicsView->scene()->addItem(jugador);
-    qDebug() << "Jugador cargado";
-    enemigo = new Enemigo(ui->graphicsView->scene());
-    enemigo->cargarEnemigosNivel2(ui->graphicsView->scene());
-    qDebug() << "enemigos cargados";
-    puntaje = new QLabel("PTS 0", this);
-    puntaje->setGeometry(100, 90, 100, 30);
-    puntaje->show();
-    qDebug() << "puntaje cargado";
-    vida = new QLabel("LIFE 100", this);
-    vida->setGeometry(358, 90, 100, 30);
-    vida->show();
-    qDebug() << "vida cargada";
-    connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
-    connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
-    timer->start(16);
-    qDebug() << "timer iniciado";
-    qDebug() << "Nivel 2 cargado sin errores";
 }
 
 void MainWindow::eliminarNivel(){
@@ -164,6 +96,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 interfazPrincipal->volverAlMenuPrincipal();
             }
             else{
+                if(nivel == 2){this->enemigo->detenerRotacion();}
                 eliminarNivel();
                 interfazPrincipal->volverAlMenuPrincipal();
             }
@@ -173,11 +106,105 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     else {
         if(this->nivel == 1){
             jugador->keyPressEvent(event);
-            qDebug() << "hola";
         }
-        if(this->nivel == 2){jugador->movimientoNivel2(event);}
+        if(this->nivel == 2){
+            //qDebug() << event;
+            jugador->movimientoNivel2(event);
+        }
     }
 }
+
+
+//-------------------SLOTS--------------------------
+void MainWindow::actualizarVista(){
+    if(jugador->finalizarNivel()){
+        timer->stop();
+        interfazPrincipal->mostrarMensajeFinal(jugador->getVida(),jugador->getPosicion());
+        return;
+    }
+    ui->graphicsView->centerOn(jugador);
+}
+
+void MainWindow::actualizarPuntaje(short int nuevoPuntaje){
+    puntaje->setText("PTS " + QString::number(nuevoPuntaje));
+}
+
+void MainWindow::actualizarVida(short int nuevaVida){
+    vida->setText("LIFE " + QString::number(nuevaVida));
+}
+
+void MainWindow::nivel1()
+{
+    nivel = 1;
+    interfazPrincipal->cargarEscenaNivel1();
+    qDebug() << "Escena cargada";
+    menuPrincipal = false;
+    jugador = new Jugador(ui->graphicsView->scene(), nivel);
+    ui->graphicsView->scene()->addItem(jugador);
+    qDebug() << "jugador cargado";
+
+    enemigo = new Enemigo();
+    enemigo->cargarEnemigosNivel1(ui->graphicsView->scene());
+    qDebug() << "enemigos cargados";
+
+    puntaje = new QLabel("PTS 0", this);
+    puntaje->setGeometry(100, 90, 100, 30);
+    puntaje->show();
+    qDebug() << "puntaje cargado";
+
+    vida = new QLabel("LIFE 100", this);
+    vida->setGeometry(358, 90, 100, 30);
+    vida->show();
+    qDebug() << "vida cargada";
+
+    connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
+    connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
+
+    timer->start(16);
+    qDebug() << "timer iniciado (actualizacion de la vista)";
+    qDebug() << "Nivel 1 cargado sin errores";
+}
+
+void MainWindow::nivel2()
+{
+    nivel = 2;
+    interfazPrincipal->cargarEscenaNivel2();
+    menuPrincipal = false;
+    qDebug() << "Escena cargada";
+  
+    jugador = new Jugador(ui->graphicsView->scene(), nivel);
+    ui->graphicsView->scene()->addItem(jugador);
+    qDebug() << "Jugador cargado";
+  
+    /*
+    enemigo = new Enemigo();
+    enemigo->cargarEnemigosNivel2Nico(ui->graphicsView->scene());
+    enemigo->iniciarRotacion();
+    qDebug() << "jugador cargado";
+    */
+  
+    enemigo = new Enemigo(ui->graphicsView->scene());
+    enemigo->cargarEnemigosNivel2(ui->graphicsView->scene());
+    qDebug() << "enemigos cargados";
+  
+    puntaje = new QLabel("PTS 0", this);
+    puntaje->setGeometry(100, 90, 100, 30);
+    puntaje->show();
+    qDebug() << "puntaje cargado";
+  
+    vida = new QLabel("LIFE 100", this);
+    vida->setGeometry(358, 90, 100, 30);
+    vida->show();
+    qDebug() << "vida cargada";
+  
+    connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
+    connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
+  
+    timer->start(16);
+    qDebug() << "timer iniciado (actualizacion de la vista)";
+    qDebug() << "Nivel 2 cargado sin errores";
+}
+
 
 
 

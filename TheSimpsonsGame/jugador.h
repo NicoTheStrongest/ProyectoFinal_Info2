@@ -8,9 +8,11 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QTimer>
-
+#include <String>
 #include "personaje.h"
 #include "fisicas.h"
+
+using namespace std;
 
 class Jugador : public personaje, public QGraphicsRectItem
 {
@@ -18,46 +20,47 @@ class Jugador : public personaje, public QGraphicsRectItem
 public:
     explicit Jugador(QObject *parent = nullptr);
     Jugador(QGraphicsScene* escena, int nivel);
+
+    //GETTERS
     QPoint getPosicion() const;
     short int getPuntos() const;
     short int getVida() const;
     bool getControl() const;
     int getNivelActual() const;
-    bool finalizarNivel();
+
+    //METODOS
+    void saltar();
     void cargarPersonaje(QGraphicsScene *scene);
-    void keyPressEvent(QKeyEvent *event);
-    void movimientoNivel2(QKeyEvent *event);
     void moverAdelante();
     void moverAtras();
     void moverArriba();
     void moverAbajo();
-    void saltar();
-    void aumentarPuntos();
-    void disminuirVida();
-    void parar();
-    void atacar();
-
     QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
-
-    float filas, columnas, ancho, alto;
-    int nivelActual;
-    Fisicas objetoFisico;
+    void keyPressEvent(QKeyEvent *event);
+    void aumentarPuntos();
+    void disminuirVida();
+    bool finalizarNivel();
+    void movimientoNivel2(QKeyEvent *event);
 signals:
     void puntajeCambiado(short int nuevoPuntaje);
     void vidaCambio(short int nuevaVida);
-
 public slots:
     void cambiarSprite();
     void aplicarGravedad();
 private:
+    //ATRIBUTOS
     QTimer* sprite;
     QTimer* mover;
     QPixmap* pixmap;
     QPoint posicion;
+    string ultimaDireccionX;
+    Fisicas objetoFisico;
     bool control, colision;
-    short int velocidad, direccionActual, puntos, vida;
-
+    double velocidadSalto;
+    float filas, columnas, ancho, alto;
+    short int direccionActual, velocidad, puntos, vida;
+    int nivelActual;
 };
 
 #endif // JUGADOR_H

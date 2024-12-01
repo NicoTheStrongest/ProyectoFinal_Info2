@@ -10,12 +10,11 @@
 #include <QTimer>
 #include <QGraphicsScene>
 
-#include "fisicas.h"
 #include "personaje.h"
+#include "fisicas.h"
 
 
 class Enemigo : public personaje, public QGraphicsPixmapItem
-
 {
     Q_OBJECT
 public:
@@ -30,23 +29,23 @@ public:
     void cargarEnemigosNivel1(QGraphicsScene *scene);
     void cargarEnemigosNivel2(QGraphicsScene *scene);
     void cargarSpriteNivel(short int nivel);
-
-    void parar();
-    bool detenerMovimiento();
+    void cargarEnemigosNivel2Nico(QGraphicsScene *scene);
+    void iniciarRotacion();
+    void detenerRotacion();
+    void cargarEnemigosNivel3(QGraphicsScene *scene);
+    
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
 public slots:
     void moverNivel1();
     void moverNivel2();
     void moverAntorchas();
     void cambiarSprite();
     void lanzarAntorcha();
-
-signals:
-
+    void movimientoSierra();
 private:
+    //ATRIBUTOS
     QPoint posicion;
     QTimer* timer;
     QTimer* timer2;
@@ -54,11 +53,15 @@ private:
     QPixmap* sprite;
     Fisicas objetoFisico;
     QList<QGraphicsPixmapItem*> antorchas;
-    bool control;
     int velocidad, direccionActual, limiteIzquierda, limiteDerecha;
     short int nivel;
-    float fila, columna, ancho, alto, columnaInicial;
-
+    float columnaInicial, fila, ancho, alto, columna;
+    QTimer* moverSierra;
+    QPointF posicionSierra, posicionSierra2;
+    qreal rotacionSierra;
+    QGraphicsPixmapItem *sierraItem;
+    QGraphicsPixmapItem *sierra2Item;
+    //QVector<Enemigo*> enemigosNivel1;
 };
 
 #endif // ENEMIGO_H

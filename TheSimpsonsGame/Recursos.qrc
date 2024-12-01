@@ -14,5 +14,6 @@
         <file>sprites/LevelCompleted.png</file>
         <file>sprites/Atras.png</file>
         <file>sprites/antorcha.png</file>
+        <file>sprites/Sierra.png</file>
     </qresource>
 </RCC>

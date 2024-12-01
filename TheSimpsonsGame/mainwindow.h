@@ -27,6 +27,8 @@ public:
     Render* interfazPrincipal;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    //METODOS
     void conectarBotones();
     void eliminarNivel();
     void keyPressEvent(QKeyEvent *event) override;
@@ -37,6 +39,7 @@ public slots:
     void nivel1();
     void nivel2();
 private:
+    //ATRIBUTOS
     Ui::MainWindow *ui;
     Jugador* jugador;
     Enemigo* enemigo;

@@ -14,6 +14,8 @@ Render::Render(Ui::MainWindow *ui) : vista(ui){
     vista->botonAtras->setVisible(false);
 }
 
+
+//-------------------METODOS--------------------------
 void Render::cargarEscenaNivel1(){
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
@@ -41,20 +43,6 @@ void Render::añadirBasura(){
         basuraItem->setData(0, "basura");
     }
 }
-
-/*
-void Render::añadirObstaculos(){
-    QPixmap obstaculoPixmap(":/sprites/obstaculoMadera.png");
-    QPixmap scaledObstaculoPixmap = obstaculoPixmap.scaled(50, 100, Qt::KeepAspectRatio);
-    QVector<QPoint> posiciones = {QPoint(580, 380), QPoint(986, 380), QPoint(1400, 386)};
-    for (const QPoint &pos : posiciones){
-        QGraphicsPixmapItem *obstaculoItem = new QGraphicsPixmapItem(scaledObstaculoPixmap);
-        obstaculoItem->setPos(pos);
-        escena->addItem(obstaculoItem);
-        obstaculoItem->setData(0,"obstaculo");
-    }
-}
-*/
 
 void Render::cargarEscenaNivel2(){
     vista->botonNivel1->setVisible(false);
@@ -93,18 +81,6 @@ void Render:: dibujarPared(int x, int y, int ancho, int alto, QColor color) {
     pared->setData(0, "plataforma");
 }
 
-void Render::volverAlMenuPrincipal(){
-    escena = new QGraphicsScene;
-    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
-    escena->addItem(fondo);
-    vista->graphicsView->setScene(escena);
-    vista->botonNivel1->setVisible(true);
-    vista->botonNivel2->setVisible(true);
-    vista->botonSalir->setVisible(true);
-    vista->botonAtras->setVisible(false);
-    qDebug() << "De vuelta en el menu principal";
-}
-
 void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     QGraphicsPixmapItem* mensajeFinal;
     QPixmap pixmapVolver(":/sprites/Atras.png");
@@ -115,12 +91,20 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
+    else{
+        qDebug() << "Nivel completo";
+        QPixmap pixmap(":/sprites/LevelCompleted.png");
+        pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
+        mensajeFinal = new QGraphicsPixmapItem(pixmap);
+    }
+    /*
     else if(posicion.x() >= 1852 && posicion.y() >= 340 && posicion.y() <= 480){
         qDebug() << "Nivel completo";
         QPixmap pixmap(":/sprites/LevelCompleted.png");
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
+    */
 
     mensajeFinal->setPos((escena->width() - mensajeFinal->pixmap().width()) / 2, (escena->height() - mensajeFinal->pixmap().height()) / 2);
 
@@ -137,8 +121,24 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     vista->graphicsView->centerOn(mensajeFinal);
 }
 
-
-
+//-------------------SLOTS--------------------------
+void Render::volverAlMenuPrincipal(){
+    /*
+    if (escena) {
+        escena->clear();
+        qDebug() << "escena limpia";
+    }
+    */
+    escena = new QGraphicsScene;
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    escena->addItem(fondo);
+    vista->graphicsView->setScene(escena);
+    vista->botonNivel1->setVisible(true);
+    vista->botonNivel2->setVisible(true);
+    vista->botonSalir->setVisible(true);
+    vista->botonAtras->setVisible(false);
+    qDebug() << "De vuelta en el menu principal";
+}
 
 
 
