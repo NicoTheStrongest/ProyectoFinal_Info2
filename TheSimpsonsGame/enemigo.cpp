@@ -11,6 +11,7 @@ Enemigo::Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, flo
     setPos(posicion);
     timer = new QTimer(this);
     timer2 = new QTimer(this);
+    timer3 = new QTimer(this);
     lanzamiento = new QTimer(this);
     if (nivel == 1){
         sprite = new QPixmap(":/sprites/NPC1.png");
@@ -25,8 +26,9 @@ Enemigo::Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, flo
        sprite->setMask(sprite->createMaskFromColor(colorAzulito.rgb(), Qt::MaskInColor));
        connect(timer2, SIGNAL(timeout()), this, SLOT(moverNivel2()));
        connect(lanzamiento, SIGNAL(timeout()), this, SLOT(lanzarAntorcha()));
-       connect(timer2,SIGNAL(timeout()), this, SLOT(moverAntorchas()));
+       connect(timer3,SIGNAL(timeout()), this, SLOT(moverAntorchas()));
        timer2->start(300);
+       timer3->start(40);
        lanzamiento->start(5);
     }
     connect(timer, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
@@ -58,23 +60,6 @@ void Enemigo::moverAbajo(){
     }
 }
 
-
-
-void Enemigo::moverNivel1(){
-    if(!detenerMovimiento()){return;}
-    if(posicion.y() >= 468){
-        direccionActual = 0;
-    }
-    else if(posicion.y() <= 369){
-        direccionActual = 1;
-    }
-    if(direccionActual == 1){
-        moverAbajo();
-    }
-    else if(direccionActual == 0){
-        moverArriba();
-    }
-}
 void Enemigo::moverNivel2(){
     int nuevaX = posicion.x();
     int nuevaY = posicion.y();
@@ -130,7 +115,7 @@ void Enemigo::moverAntorchas(){
     for(int i = 0; i < antorchas.size(); i++){
         QGraphicsPixmapItem* antorcha = antorchas[i];
         QPoint posicionAct = QPoint(antorcha->pos().x(), antorcha->pos().y());
-        objetoFisico.aplicarGravedad(posicionAct,30);
+        objetoFisico.aplicarGravedad(posicionAct,0);
         antorcha->setPos(posicionAct);
         if(antorcha->pos().y() >= 530){
             scene()->removeItem(antorcha);
@@ -170,8 +155,9 @@ void Enemigo::cargarEnemigosNivel2(QGraphicsScene *scene){
     enemigo6->setData(0, "enemigo");
     scene->addItem(enemigo6);
     qDebug() << "Enemigo creado con posición:" << enemigo6->pos() << "y data(0):" << enemigo6->data(0).toString();
+}
 
-void Enemigo::cargarEnemigosNivel2Nico(QGraphicsScene *scene){
+void Enemigo::cargarEnemigosSierra1(QGraphicsScene *scene, int posX, int posY){
     moverSierra = new QTimer(this);
     connect(moverSierra, SIGNAL(timeout()), this, SLOT(movimientoSierra()));
 
@@ -181,7 +167,22 @@ void Enemigo::cargarEnemigosNivel2Nico(QGraphicsScene *scene){
     sierraItem = new QGraphicsPixmapItem(scaledsierraPixmap);
     scene->addItem(sierraItem);
     sierraItem->setData(0,"sierra");
-    objetoFisico.inicializarMovimientoCircular(100, 370, 50, 5, 6, 0, 0);
+    objetoFisico.inicializarMovimientoCircular(posX, posY, 50, 5, 6, 0, 0);
+    rotacionSierra = 0;
+    sierraItem->setTransformOriginPoint(boundingRect().center());
+}
+
+void Enemigo::cargarEnemigosSierra2(QGraphicsScene *scene, int posX, int posY){
+    moverSierra = new QTimer(this);
+    connect(moverSierra, SIGNAL(timeout()), this, SLOT(movimientoSierra()));
+
+    //sierra 1
+    QPixmap sierraPixmap(":/sprites/Sierra.png");
+    QPixmap scaledsierraPixmap = sierraPixmap.scaled(40, 40, Qt::KeepAspectRatio);
+    sierraItem = new QGraphicsPixmapItem(scaledsierraPixmap);
+    scene->addItem(sierraItem);
+    sierraItem->setData(0,"sierra");
+    objetoFisico.inicializarMovimientoCircular(posX, posY, 50, 5, 6, 0, 0);
     rotacionSierra = 0;
     sierraItem->setTransformOriginPoint(boundingRect().center());
 }
@@ -205,8 +206,8 @@ void Enemigo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 }
 
 //-------------------SLOTS--------------------------
-/*
-void Enemigo::mover(){
+
+void Enemigo::moverNivel1(){
     if(posicion.y() >= 468){
         direccionActual = 0;
     }
@@ -220,7 +221,6 @@ void Enemigo::mover(){
         moverArriba();
     }
 }
-*/
 
 void Enemigo::cambiarSprite(){
     columna += ancho;

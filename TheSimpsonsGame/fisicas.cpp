@@ -12,13 +12,14 @@ Fisicas::Fisicas(QObject *parent)
 void Fisicas::setTiempo(double newTiempo){this->tiempo = newTiempo;}
 
 //-------------------METODOS--------------------------
-void Fisicas::aplicarGravedad(QPoint &posicion, int velocidadDefecto, string ultimaDireccionx){
+void Fisicas::aplicarGravedad(QPoint &posicion, int velocidadDefecto){
     tiempo += 0.050;
     //int equis = posicion.x();
     //if(ultimaDireccionx == "derecha"){equis += velocidadDefecto;}
     //else if(ultimaDireccionx == "izquierda"){equis -= velocidadDefecto;}
     int ye = posicion.y();
     velocidadY = velocidadDefecto + gravedad*tiempo;
+    velocidadY = (velocidadY > 15) ? 15 : velocidadY;
     //double nuevaY = ye + (velocidadY * tiempo - 0.5 * gravedad * tiempo * tiempo);
     double nuevaY = ye + velocidadY;
     //posicion.setX(equis);

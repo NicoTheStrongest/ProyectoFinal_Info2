@@ -29,7 +29,8 @@ public:
     void cargarEnemigosNivel1(QGraphicsScene *scene);
     void cargarEnemigosNivel2(QGraphicsScene *scene);
     void cargarSpriteNivel(short int nivel);
-    void cargarEnemigosNivel2Nico(QGraphicsScene *scene);
+    void cargarEnemigosSierra1(QGraphicsScene *scene, int posX, int posY);
+    void cargarEnemigosSierra2(QGraphicsScene *scene, int posX, int posY);
     void iniciarRotacion();
     void detenerRotacion();
     void cargarEnemigosNivel3(QGraphicsScene *scene);
@@ -49,6 +50,7 @@ private:
     QPoint posicion;
     QTimer* timer;
     QTimer* timer2;
+    QTimer* timer3;
     QTimer* lanzamiento;
     QPixmap* sprite;
     Fisicas objetoFisico;
