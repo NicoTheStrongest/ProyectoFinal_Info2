@@ -101,7 +101,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 interfazPrincipal->volverAlMenuPrincipal();
             }
             menuPrincipal = true;
-            event->accept();
         }
     }
     else {
@@ -172,29 +171,35 @@ void MainWindow::nivel2()
     interfazPrincipal->cargarEscenaNivel2();
     menuPrincipal = false;
     qDebug() << "Escena cargada";
-
+  
     jugador = new Jugador(ui->graphicsView->scene(), nivel);
     ui->graphicsView->scene()->addItem(jugador);
-    qDebug() << "jugador cargado";
-
+    qDebug() << "Jugador cargado";
+  
+    /*
     enemigo = new Enemigo();
     enemigo->cargarEnemigosNivel2Nico(ui->graphicsView->scene());
     enemigo->iniciarRotacion();
     qDebug() << "jugador cargado";
-
+    */
+  
+    enemigo = new Enemigo(ui->graphicsView->scene());
+    enemigo->cargarEnemigosNivel2(ui->graphicsView->scene());
+    qDebug() << "enemigos cargados";
+  
     puntaje = new QLabel("PTS 0", this);
     puntaje->setGeometry(100, 90, 100, 30);
     puntaje->show();
     qDebug() << "puntaje cargado";
-
+  
     vida = new QLabel("LIFE 100", this);
     vida->setGeometry(358, 90, 100, 30);
     vida->show();
     qDebug() << "vida cargada";
-
+  
     connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
     connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
-
+  
     timer->start(16);
     qDebug() << "timer iniciado (actualizacion de la vista)";
     qDebug() << "Nivel 2 cargado sin errores";

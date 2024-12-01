@@ -19,9 +19,8 @@ class Enemigo : public personaje, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     explicit Enemigo(QObject *parent = nullptr);
-    Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, float columnaInicial, float fila, float ancho);
-
-    //METODOS
+    Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, float columnaInicial, float fila, float ancho, float alto, short int nivel);
+    QPoint getPosicion() const;
     void moverArriba();
     void moverAbajo();
     void moverAdelante();
@@ -29,32 +28,40 @@ public:
 
     void cargarEnemigosNivel1(QGraphicsScene *scene);
     void cargarEnemigosNivel2(QGraphicsScene *scene);
+    void cargarSpriteNivel(short int nivel);
     void cargarEnemigosNivel2Nico(QGraphicsScene *scene);
     void iniciarRotacion();
     void detenerRotacion();
     void cargarEnemigosNivel3(QGraphicsScene *scene);
-
+    
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 public slots:
-    void mover();
+    void moverNivel1();
+    void moverNivel2();
+    void moverAntorchas();
     void cambiarSprite();
+    void lanzarAntorcha();
     void movimientoSierra();
 private:
     //ATRIBUTOS
     QPoint posicion;
     QTimer* timer;
+    QTimer* timer2;
+    QTimer* lanzamiento;
+    QPixmap* sprite;
+    Fisicas objetoFisico;
+    QList<QGraphicsPixmapItem*> antorchas;
+    int velocidad, direccionActual, limiteIzquierda, limiteDerecha;
+    short int nivel;
+    float columnaInicial, fila, ancho, alto, columna;
     QTimer* moverSierra;
     QPointF posicionSierra, posicionSierra2;
     qreal rotacionSierra;
-    QPixmap* sprite;
     QGraphicsPixmapItem *sierraItem;
     QGraphicsPixmapItem *sierra2Item;
-    QVector<Enemigo*> enemigosNivel1;
-    Fisicas objetoFisico;
-    int velocidad, direccionActual;
-    float columnaInicial, fila, ancho, alto, columna;
+    //QVector<Enemigo*> enemigosNivel1;
 };
 
 #endif // ENEMIGO_H

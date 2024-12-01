@@ -1,7 +1,7 @@
 #include "personaje.h"
 
 personaje::personaje(QObject *parent)
-    : QObject{parent}, vida(10), ancho(40), altura(40)
+    : QObject{parent}, vida(100)
 {}
 
 //-------------------SETTERS--------------------------

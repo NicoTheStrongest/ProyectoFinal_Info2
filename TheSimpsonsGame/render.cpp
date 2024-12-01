@@ -123,10 +123,12 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
 
 //-------------------SLOTS--------------------------
 void Render::volverAlMenuPrincipal(){
+    /*
     if (escena) {
         escena->clear();
         qDebug() << "escena limpia";
     }
+    */
     escena = new QGraphicsScene;
     fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
     escena->addItem(fondo);
@@ -137,7 +139,6 @@ void Render::volverAlMenuPrincipal(){
     vista->botonAtras->setVisible(false);
     qDebug() << "De vuelta en el menu principal";
 }
-
 
 
 
