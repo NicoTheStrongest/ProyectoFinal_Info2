@@ -9,17 +9,19 @@
 #include <QPainter>
 #include <QTimer>
 #include <QGraphicsScene>
+
 #include "personaje.h"
+#include "fisicas.h"
 
 
 class Enemigo : public personaje, public QGraphicsPixmapItem
-
 {
     Q_OBJECT
 public:
     explicit Enemigo(QObject *parent = nullptr);
     Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, float columnaInicial, float fila, float ancho);
-    QPoint getPosicion() const;
+
+    //METODOS
     void moverArriba();
     void moverAbajo();
     void moverAdelante();
@@ -27,28 +29,32 @@ public:
 
     void cargarEnemigosNivel1(QGraphicsScene *scene);
     void cargarEnemigosNivel2(QGraphicsScene *scene);
+    void cargarEnemigosNivel2Nico(QGraphicsScene *scene);
+    void iniciarRotacion();
+    void detenerRotacion();
     void cargarEnemigosNivel3(QGraphicsScene *scene);
-    void parar();
-    bool detenerMovimiento();
+
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
 public slots:
     void mover();
     void cambiarSprite();
-
-signals:
-
+    void movimientoSierra();
 private:
+    //ATRIBUTOS
     QPoint posicion;
     QTimer* timer;
+    QTimer* moverSierra;
+    QPointF posicionSierra, posicionSierra2;
+    qreal rotacionSierra;
     QPixmap* sprite;
+    QGraphicsPixmapItem *sierraItem;
+    QGraphicsPixmapItem *sierra2Item;
     QVector<Enemigo*> enemigosNivel1;
-    bool control;
+    Fisicas objetoFisico;
     int velocidad, direccionActual;
-    float fila, columna, ancho, alto, columnaInicial;
-
+    float columnaInicial, fila, ancho, alto, columna;
 };
 
 #endif // ENEMIGO_H

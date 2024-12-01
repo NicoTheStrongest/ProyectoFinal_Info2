@@ -5,54 +5,57 @@ Jugador::Jugador(QObject *parent)
 {}
 
 Jugador::Jugador(QGraphicsScene *escena, int nivel)
-    : direccionActual(2), velocidad(2), puntos(0), vida(100), nivelActual(nivel)
-{
+    : direccionActual(2), velocidad(2), puntos(0), vida(100), nivelActual(nivel){
     personaje::setEscenario(escena);
+    //HITBOX
     setRect(0, 0, 44, 64);
-    //setBrush(QBrush(Qt::yellow));
-    //setFlag(QGraphicsItem::ItemIsFocusable);
-    //setFocus();
+    pixmap = new QPixmap(":/sprites/Homer.png");
 
-    mover = new QTimer();
+    //CONNECTS DE TIMERS
+    mover = new QTimer(); //->APLICAR GRAVEDAD (LVL 2)
     connect(mover, SIGNAL(timeout()), this, SLOT(aplicarGravedad()));
+    sprite = new QTimer(); //->MANEJO DE SPRITES
+    connect(sprite, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
+
+    //POSICIONES INICIALES
     if (nivelActual == 1){
-        posicion = QPoint(20, 370);
-        pixmap = new QPixmap(":/sprites/Homer.png");
+        posicion = QPoint(20, 370); //POSICION INICIAL (LVL 1)
     }
     else if (nivelActual == 2){
-        posicion = QPoint(660, 460);
-        pixmap = new QPixmap(":/sprites/Homer.png");
-        mover->start(60);
+        posicion = QPoint(360, 463); //POSICION INICIAL (LVL 1)
+        mover->start(50);
+        ultimaDireccionX = "";
     }
     setPos(posicion);
 
-    sprite = new QTimer();
-    connect(sprite, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
-    sprite->start(300);
-
+    //MANEJO DE SPRITES
     filas = 15;
     columnas = 83;
-    QColor colorVerde(25, 255, 95);
-    pixmap->setMask(pixmap->createMaskFromColor(colorVerde.rgb(), Qt::MaskInColor));
     ancho = 44;
     alto = 64;
+    QColor colorVerde(25, 255, 95);
+    pixmap->setMask(pixmap->createMaskFromColor(colorVerde.rgb(), Qt::MaskInColor));
+    sprite->start(300);
 }
 
+//-------------------GETTERS--------------------------
 QPoint Jugador::getPosicion() const {return posicion;}
 short int Jugador::getPuntos() const {return puntos;}
 short int Jugador::getVida() const {return vida;}
 bool Jugador::getControl() const {return control;}
 int Jugador:: getNivelActual() const {return nivelActual;}
-void Jugador::cargarPersonaje(QGraphicsScene *scene){
-    scene->addItem(this);
-    setPos(posicion);
-}
 
+//-------------------METODOS--------------------------
 void Jugador::saltar(){
     if(posicion.y() - 20 > 340){
         posicion.setY(posicion.y() - 20);
         setPos(posicion);
     }
+}
+
+void Jugador::cargarPersonaje(QGraphicsScene *scene){
+    scene->addItem(this);
+    setPos(posicion);
 }
 
 void Jugador::moverAdelante(){
@@ -98,18 +101,6 @@ QRectF Jugador::boundingRect() const{
 
 void Jugador::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     painter->drawPixmap(0,0,*pixmap,columnas,filas,ancho, alto);
-}
-
-void Jugador::cambiarSprite(){
-    columnas += 44;
-    if(columnas>=435){
-        columnas = 83;
-    }
-    this->update(0,0,ancho,alto);
-}
-
-void Jugador::parar(){
-    control = false;
 }
 
 void Jugador::keyPressEvent(QKeyEvent *event){
@@ -193,8 +184,6 @@ void Jugador::keyPressEvent(QKeyEvent *event){
     }
 }
 
-
-
 void Jugador::aumentarPuntos(){
     puntos += 25;
     emit puntajeCambiado(puntos);
@@ -208,18 +197,29 @@ void Jugador::disminuirVida(){
 }
 
 bool Jugador::finalizarNivel(){
-    if(posicion.x() >= 1852 && puntos == 100){
-        return true;
+    if(nivelActual == 1){
+        if(posicion.x() >= 1852 && puntos == 100){
+            return true;
+        }
+        else if(vida <= 0){
+            return true;
+        }
+        return false;
     }
-    else if(vida <= 0){
-        return true;
+    else if(nivelActual == 2){
+        if(posicion.x() <= 295 && posicion.y() <= 295){
+            return true;
+        }
+        else if(vida <= 0){
+            return true;
+        }
+        return false;
     }
     return false;
 }
 
 void Jugador::movimientoNivel2(QKeyEvent *event){
     int nuevaX = x();
-    int nuevaY = y();
     int viejaX = x();
     int viejaY = y();
     // Verificar las cuatro esquinas del personaje
@@ -227,7 +227,9 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
     case Qt::Key_Left:
     case  Qt::Key_A:
     {
+        ultimaDireccionX = "izquierda";
         nuevaX = x() - velocidad;
+        qDebug()<<"izquierda";
         //posicion.setX(posicion.x() - velocidad);
         //moverAtras();
         break;
@@ -235,7 +237,9 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
     case Qt::Key_Right:
     case Qt::Key_D:
     {
+        ultimaDireccionX = "derecha";
         nuevaX = x() + velocidad;
+        qDebug()<<"derecha";
         //posicion.setX(posicion.x() + velocidad);
         //moverAdelante();
         break;
@@ -243,7 +247,11 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
     case Qt::Key_Up:
     case Qt::Key_W:
     {
-        if(!colision){nuevaY = y() -10;}
+        if(colision){
+            ultimaDireccionX = "arriba";
+            velocidadSalto = -12;
+            qDebug()<<"salta";
+        }
         //posicion.setY(posicion.y() - 6);
         //moverArriba();
         break;
@@ -251,14 +259,9 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
     case Qt::Key_Down:
     case Qt::Key_S:
     {
-        nuevaY = y() + velocidad;
+        //nuevaY = y() + velocidad;
         //posicion.setY(posicion.y() + velocidad);
         //moverAbajo();
-        break;
-    }
-    case Qt::Key_Space:
-    {
-        //saltar();
         break;
     }
     case Qt::Key_Escape:
@@ -270,10 +273,8 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         return;
     default:
         break;
-    }    
+    }
     posicion.setX(nuevaX);
-    posicion.setY(nuevaY);
-
     setPos(posicion);
 
     // Verificar si colisiona con algún objeto etiquetado como "pared"
@@ -282,21 +283,41 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
     for (QGraphicsItem* item : colisiones) {
         //qDebug() << "Elemento en colisión, data(0):" << item->data(0).toString();
         if (item->data(0).toString() == "plataforma") {
-            posicion.setX(viejaX);
+            objetoFisico.setTiempo(0.0);
+            velocidadSalto = 0;
+            if(ultimaDireccionX == "derecha"){posicion.setX(viejaX-1);}
+            if(ultimaDireccionX == "izquierda"){posicion.setX(viejaX+1);}
             posicion.setY(viejaY);
             setPos(posicion);
             colision = true;
             qDebug()<<"colision";
             return;
         }
+        else if(item->data(0).toString() == "sierra"){
+            posicion.setX(360);
+            posicion.setY(463);
+            setPos(posicion);
+            disminuirVida();
+            qDebug()<<"navajazo";
+        }
+        else{colision = false;}
     }
-    colision = false;
+}
+
+
+//-------------------SLOTS--------------------------
+void Jugador::cambiarSprite(){
+    columnas += 44;
+    if(columnas>=435){
+        columnas = 83;
+    }
+    this->update(0,0,ancho,alto);
 }
 
 void Jugador::aplicarGravedad(){
     int viejaX = x();
     int viejaY = y();
-    objetoFisico.aplicarGravedad(posicion, velocidad);
+    objetoFisico.aplicarGravedad(posicion, velocidadSalto, ultimaDireccionX);
     setPos(posicion);
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
@@ -304,26 +325,26 @@ void Jugador::aplicarGravedad(){
     for (QGraphicsItem* item : colisiones) {
         //qDebug() << "Elemento en colisión, data(0):" << item->data(0).toString();
         if (item->data(0).toString() == "plataforma") {
+            objetoFisico.setTiempo(0.0);
+            velocidadSalto = 0;
             posicion.setX(viejaX);
             posicion.setY(viejaY);
+            //if(ultimaDireccionX == "arriba"){posicion.setY(viejaY+1);}
+            //else{posicion.setY(viejaY);}
             setPos(posicion);
             colision = true;
-            qDebug()<<"colision";
+            //qDebug()<<"colision";
             return;
         }
+        else if(item->data(0).toString() == "sierra"){
+            posicion.setX(360);
+            posicion.setY(463);
+            setPos(posicion);
+            disminuirVida();
+            qDebug()<<"navajazo";
+        }
     }
-    colision = false;
-    qDebug() << "aplicando gravedad";
 }
-
-
-
-
-
-
-
-
-
 
 
 

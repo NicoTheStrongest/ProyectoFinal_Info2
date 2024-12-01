@@ -4,20 +4,22 @@ Enemigo::Enemigo(QObject *parent)
     : personaje{parent}
 {}
 
+//CONTRUCTOR (LVL 1)
 Enemigo::Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, float columnaInicial, float fila, float ancho)
-    :posicion(posicionInicial), velocidad(velocidad), direccionActual(direccionActual), control(true), columnaInicial(columnaInicial), fila(fila), ancho(ancho), alto(85)
+    :posicion(posicionInicial), velocidad(velocidad), direccionActual(direccionActual),
+    columnaInicial(columnaInicial), fila(fila), ancho(ancho), alto(85)
 {
     setPos(posicion);
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
     timer->start(500);
-
     sprite = new QPixmap(":/sprites/NPC1.png");
     QColor colorAzul(151,198,222,255);
     sprite->setMask(sprite->createMaskFromColor(colorAzul.rgb(), Qt::MaskInColor));
     connect(timer, SIGNAL(timeout()), this, SLOT(mover()));
 }
 
+//-------------------METODOS--------------------------
 void Enemigo::moverArriba(){
     if(posicion.y() - velocidad > 340){
         posicion.setY(posicion.y() - velocidad);
@@ -53,46 +55,6 @@ void Enemigo::moverAtras(){
         qDebug() << "Moviendo atrás, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
     }
 }
-bool Enemigo::detenerMovimiento(){
-    return control;
-}
-
-void Enemigo::parar(){
-    control = false;
-}
-void Enemigo::mover(){
-    if(!detenerMovimiento()){return;}
-    if(posicion.y() >= 468){
-        direccionActual = 0;
-    }
-    else if(posicion.y() <= 369){
-        direccionActual = 1;
-    }
-    if(direccionActual == 1){
-        moverAbajo();
-    }
-    else if(direccionActual == 0){
-        moverArriba();
-    }
-}
-
-QRectF Enemigo::boundingRect() const
-{
-    return QRectF(-ancho / 2, -alto / 2, ancho, alto);
-}
-
-QPainterPath Enemigo::shape() const {
-    QPainterPath rectangulo;
-    rectangulo.addRect(boundingRect());
-    return rectangulo;
-}
-
-void Enemigo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    float filaInicial = fila * alto;
-    painter->drawPixmap(-ancho / 2, -alto / 2, *sprite , columna, filaInicial, ancho, alto);
-}
-
 
 void Enemigo::cargarEnemigosNivel1(QGraphicsScene *scene){
     Enemigo* enemigo1 = new Enemigo(QPoint(380, 369), 2, 1, 0, 0.3, 44);
@@ -113,6 +75,55 @@ void Enemigo::cargarEnemigosNivel1(QGraphicsScene *scene){
     qDebug() << "Enemigo creado con posición:" << enemigo4->pos() << "y data(0):" << enemigo4->data(0).toString();
 }
 
+void Enemigo::cargarEnemigosNivel2Nico(QGraphicsScene *scene){
+    moverSierra = new QTimer(this);
+    connect(moverSierra, SIGNAL(timeout()), this, SLOT(movimientoSierra()));
+
+    //sierra 1
+    QPixmap sierraPixmap(":/sprites/Sierra.png");
+    QPixmap scaledsierraPixmap = sierraPixmap.scaled(40, 40, Qt::KeepAspectRatio);
+    sierraItem = new QGraphicsPixmapItem(scaledsierraPixmap);
+    scene->addItem(sierraItem);
+    sierraItem->setData(0,"sierra");
+    objetoFisico.inicializarMovimientoCircular(100, 370, 50, 5, 6, 0, 0);
+    rotacionSierra = 0;
+    sierraItem->setTransformOriginPoint(boundingRect().center());
+}
+
+void Enemigo::iniciarRotacion(){moverSierra->start(16);}
+void Enemigo::detenerRotacion(){moverSierra->stop();}
+
+QRectF Enemigo::boundingRect() const{
+    return QRectF(-ancho / 2, -alto / 2, ancho, alto);
+}
+
+QPainterPath Enemigo::shape() const {
+    QPainterPath rectangulo;
+    rectangulo.addRect(boundingRect());
+    return rectangulo;
+}
+
+void Enemigo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+    float filaInicial = fila * alto;
+    painter->drawPixmap(-ancho / 2, -alto / 2, *sprite , columna, filaInicial, ancho, alto);
+}
+
+//-------------------SLOTS--------------------------
+void Enemigo::mover(){
+    if(posicion.y() >= 468){
+        direccionActual = 0;
+    }
+    else if(posicion.y() <= 369){
+        direccionActual = 1;
+    }
+    if(direccionActual == 1){
+        moverAbajo();
+    }
+    else if(direccionActual == 0){
+        moverArriba();
+    }
+}
+
 void Enemigo::cambiarSprite(){
     columna += ancho;
     if(columna >= columnaInicial + (210)){
@@ -120,3 +131,33 @@ void Enemigo::cambiarSprite(){
     }
     this->update(-ancho/2,-alto/2,ancho,alto);
 }
+
+void Enemigo::movimientoSierra(){
+    //sierra 1
+    objetoFisico.aplicarMovimientocircular(posicionSierra, rotacionSierra);
+    this->sierraItem->setPos(posicionSierra);
+    this->sierraItem->setRotation(rotacionSierra);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
