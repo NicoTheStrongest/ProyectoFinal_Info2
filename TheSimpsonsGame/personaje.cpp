@@ -1,7 +1,7 @@
 #include "personaje.h"
 
 personaje::personaje(QObject *parent)
-    : QObject{parent}, vida(5), ancho(20), altura(20)
+    : QObject{parent}, vida(100)
 {}
 
 void personaje::setEscenario(QGraphicsScene *newEscenario){escenario = newEscenario;}

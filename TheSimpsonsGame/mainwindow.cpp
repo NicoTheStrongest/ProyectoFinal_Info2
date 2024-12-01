@@ -95,9 +95,14 @@ void MainWindow::nivel2()
 {
     nivel = 2;
     interfazPrincipal->cargarEscenaNivel2();
+    qDebug() << "Escena cargada";
     menuPrincipal = false;
     jugador = new Jugador(ui->graphicsView->scene(), nivel);
     ui->graphicsView->scene()->addItem(jugador);
+    qDebug() << "Jugador cargado";
+    enemigo = new Enemigo(ui->graphicsView->scene());
+    enemigo->cargarEnemigosNivel2(ui->graphicsView->scene());
+    qDebug() << "enemigos cargados";
     puntaje = new QLabel("PTS 0", this);
     puntaje->setGeometry(100, 90, 100, 30);
     puntaje->show();
@@ -109,6 +114,8 @@ void MainWindow::nivel2()
     connect(jugador, SIGNAL(puntajeCambiado(short)), this, SLOT(actualizarPuntaje(short)));
     connect(jugador, SIGNAL(vidaCambio(short)), this, SLOT(actualizarVida(short)));
     timer->start(16);
+    qDebug() << "timer iniciado";
+    qDebug() << "Nivel 2 cargado sin errores";
 }
 
 void MainWindow::eliminarNivel(){
@@ -161,7 +168,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
                 interfazPrincipal->volverAlMenuPrincipal();
             }
             menuPrincipal = true;
-            event->accept();
         }
     }
     else {

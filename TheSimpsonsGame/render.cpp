@@ -94,10 +94,6 @@ void Render:: dibujarPared(int x, int y, int ancho, int alto, QColor color) {
 }
 
 void Render::volverAlMenuPrincipal(){
-    if (escena) {
-        escena->clear();
-        qDebug() << "escena limpia";
-    }
     escena = new QGraphicsScene;
     fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
     escena->addItem(fondo);

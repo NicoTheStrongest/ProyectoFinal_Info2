@@ -9,14 +9,12 @@
 #include <Qpoint>
 #include <QKeyEvent>
 
-#include "sprites.h"
 
 class personaje : public QObject
 {
     Q_OBJECT
 
 public:
-    sprites personalSprite;
 
     explicit personaje(QObject *parent = nullptr);
 

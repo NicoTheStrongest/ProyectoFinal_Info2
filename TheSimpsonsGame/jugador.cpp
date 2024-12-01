@@ -20,7 +20,7 @@ Jugador::Jugador(QGraphicsScene *escena, int nivel)
         pixmap = new QPixmap(":/sprites/Homer.png");
     }
     else if (nivelActual == 2){
-        posicion = QPoint(660, 460);
+        posicion = QPoint(734, 478);
         pixmap = new QPixmap(":/sprites/Homer.png");
         mover->start(60);
     }
@@ -114,11 +114,6 @@ void Jugador::parar(){
 
 void Jugador::keyPressEvent(QKeyEvent *event){
     qDebug() << "tecla presionada desde jugador";
-    if (event->key() == Qt::Key_Escape) {
-        event->ignore();
-        return;
-    }
-
     switch(event->key()){
     case Qt::Key_Left:
     case  Qt::Key_A:
@@ -149,14 +144,6 @@ void Jugador::keyPressEvent(QKeyEvent *event){
         saltar();
         break;
     }
-    case Qt::Key_Escape:
-    {
-        //Aca se puede poner tambien el menu de opciones para volver o continuar
-
-        qDebug() << "Se presionó ESC. Cerrando la aplicación...";
-        QApplication::quit();  // Cerrar la aplicación
-    }
-        return;
     default:
         break;
     }
@@ -230,6 +217,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         nuevaX = x() - velocidad;
         //posicion.setX(posicion.x() - velocidad);
         //moverAtras();
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Right:
@@ -238,6 +226,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         nuevaX = x() + velocidad;
         //posicion.setX(posicion.x() + velocidad);
         //moverAdelante();
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Up:
@@ -246,6 +235,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         if(!colision){nuevaY = y() -10;}
         //posicion.setY(posicion.y() - 6);
         //moverArriba();
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Down:
@@ -254,6 +244,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         nuevaY = y() + velocidad;
         //posicion.setY(posicion.y() + velocidad);
         //moverAbajo();
+        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Space:
@@ -288,6 +279,15 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
             colision = true;
             qDebug()<<"colision";
             return;
+        }
+        else if(item->data(0).toString() == "enemigo"){
+            if(item->data(1).toBool() == false){
+                item->setOpacity(0);
+                item->setData(1,true);
+                qDebug() << "colision enemigo";
+                disminuirVida();
+                break;
+            }
         }
     }
     colision = false;
