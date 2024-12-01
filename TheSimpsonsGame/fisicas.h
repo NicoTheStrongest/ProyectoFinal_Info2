@@ -22,7 +22,7 @@ public:
     void setTiempo(double newTiempo);
 
     //METODOS
-    void aplicarGravedad(QPoint &posicion, int velocidadDefecto, string ultimaDireccionx);
+    void aplicarGravedad(QPoint &posicion, int velocidadDefecto);
     void inicializarMovimientoCircular(qreal xCentro, qreal yCentro, qreal radio,
                                             qreal velocidadAngular, qreal velocidadRotacion,
                                             int X, int Y);

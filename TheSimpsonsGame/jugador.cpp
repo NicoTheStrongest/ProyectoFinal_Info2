@@ -22,7 +22,7 @@ Jugador::Jugador(QGraphicsScene *escena, int nivel)
         posicion = QPoint(20, 370); //POSICION INICIAL (LVL 1)
     }
     else if (nivelActual == 2){
-        posicion = QPoint(360, 463); //POSICION INICIAL (LVL 1)
+        posicion = QPoint(660, 463); //POSICION INICIAL (LVL 1)
         mover->start(50);
         ultimaDireccionX = "";
     }
@@ -280,25 +280,24 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
             setPos(posicion);
             colision = true;
             qDebug()<<"colision";
-            return;
         }
-        else if(item->data(0).toString() == "enemigo"){
+        if(item->data(0).toString() == "enemigo"){
             if(item->data(1).toBool() == false){
                 item->setOpacity(0);
                 item->setData(1,true);
                 qDebug() << "colision enemigo";
                 disminuirVida();
-                break;
             }
         }
-        else if(item->data(0).toString() == "sierra"){
-            posicion.setX(360);
+        if(item->data(0).toString() == "sierra"){
+            posicion.setX(660);
             posicion.setY(463);
             setPos(posicion);
             disminuirVida();
             qDebug()<<"navajazo";
         }
         else{colision = false;}
+        return;
     }
 }
 
@@ -315,7 +314,7 @@ void Jugador::cambiarSprite(){
 void Jugador::aplicarGravedad(){
     int viejaX = x();
     int viejaY = y();
-    objetoFisico.aplicarGravedad(posicion, velocidadSalto, ultimaDireccionX);
+    objetoFisico.aplicarGravedad(posicion, velocidadSalto);
     setPos(posicion);
     // Verificar si colisiona con algún objeto etiquetado como "pared"
     QList<QGraphicsItem*> colisiones = collidingItems();
@@ -332,15 +331,24 @@ void Jugador::aplicarGravedad(){
             setPos(posicion);
             colision = true;
             //qDebug()<<"colision";
-            return;
         }
-        else if(item->data(0).toString() == "sierra"){
-            posicion.setX(360);
+        if(item->data(0).toString() == "enemigo"){
+            if(item->data(1).toBool() == false){
+                item->setOpacity(0);
+                //this->escenario->removeItem(item);
+                item->setData(1,true);
+                disminuirVida();
+                qDebug() << "colision enemigo";
+            }
+        }
+        if(item->data(0).toString() == "sierra"){
+            posicion.setX(660);
             posicion.setY(463);
             setPos(posicion);
             disminuirVida();
             qDebug()<<"navajazo";
         }
+        return;
     }
 }
 
