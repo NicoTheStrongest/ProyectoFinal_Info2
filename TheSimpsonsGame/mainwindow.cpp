@@ -259,6 +259,7 @@ void MainWindow::nivel2()
 
     jugador = new Jugador(ui->graphicsView->scene(), nivel);
     ui->graphicsView->scene()->addItem(jugador);
+    jugador->setPos(660, 463);
     qDebug() << "jugador cargado";
 
     enemigo = new Enemigo(ui->graphicsView->scene());
@@ -310,7 +311,9 @@ void MainWindow::on_ingresar_clicked()
         interfazPrincipal->cargarMenuNivel();
     } else {
         qDebug() << "Credenciales incorrectas";
+        //QMessageBox::information(this, "Éxito", "Inicio de sesión fracasado, pendiente de solucion.");
         QMessageBox::warning(this, "Error", "Usuario o contraseña incorrectos.");
+        //interfazPrincipal->cargarMenuNivel();
     }
 }
 

@@ -26,7 +26,6 @@ public:
 private:
     //ATRIBUTOS
     QGraphicsScene* escenario;
-    short int vida;
     unsigned int ancho, altura;
 };
 
