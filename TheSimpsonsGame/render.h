@@ -22,6 +22,7 @@ public:
     Render(Ui::MainWindow *ui);
 
     //METODOS
+    void cargarMenuNivel();
     void cargarEscenaNivel1();
     void añadirBasura();
     void cargarEscenaNivel2();

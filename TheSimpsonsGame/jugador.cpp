@@ -215,9 +215,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         ultimaDireccionX = "izquierda";
         nuevaX = x() - velocidad;
         qDebug()<<"izquierda";
-        //posicion.setX(posicion.x() - velocidad);
-        //moverAtras();
-        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
+        //qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Right:
@@ -226,9 +224,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
         ultimaDireccionX = "derecha";
         nuevaX = x() + velocidad;
         qDebug()<<"derecha";
-        //posicion.setX(posicion.x() + velocidad);
-        //moverAdelante();
-        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
+        //qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Up:
@@ -238,19 +234,8 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
             ultimaDireccionX = "arriba";
             velocidadSalto = -12;
             qDebug()<<"salta";
+            //qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         }
-        //posicion.setY(posicion.y() - 6);
-        //moverArriba();
-        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
-        break;
-    }
-    case Qt::Key_Down:
-    case Qt::Key_S:
-    {
-        //nuevaY = y() + velocidad;
-        //posicion.setY(posicion.y() + velocidad);
-        //moverAbajo();
-        qDebug() << "Moviendo adelante, nueva posicion X:" << posicion.x() << "Nueva posicion Y:" << posicion.y();
         break;
     }
     case Qt::Key_Escape:
@@ -280,6 +265,7 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
             setPos(posicion);
             colision = true;
             qDebug()<<"colision";
+            return;
         }
         if(item->data(0).toString() == "enemigo"){
             if(item->data(1).toBool() == false){
@@ -295,9 +281,9 @@ void Jugador::movimientoNivel2(QKeyEvent *event){
             setPos(posicion);
             disminuirVida();
             qDebug()<<"navajazo";
+            return;
         }
         else{colision = false;}
-        return;
     }
 }
 
@@ -311,47 +297,60 @@ void Jugador::cambiarSprite(){
     this->update(0,0,ancho,alto);
 }
 
-void Jugador::aplicarGravedad(){
+void Jugador::aplicarGravedad() {
     int viejaX = x();
     int viejaY = y();
+
+    // Aplicar gravedad
     objetoFisico.aplicarGravedad(posicion, velocidadSalto);
-    setPos(posicion);
-    // Verificar si colisiona con algún objeto etiquetado como "pared"
+    setPos(posicion);  // Actualiza temporalmente la posición del jugador
+
+    // Verificar si colisiona con algún objeto
     QList<QGraphicsItem*> colisiones = collidingItems();
-    //qDebug() << "Cantidad de colisiones detectadas:" << colisiones.size();
+
+    bool colisionPlataforma = false;
+    bool colisionEnemigo = false;
+    bool colisionSierra = false;
+
     for (QGraphicsItem* item : colisiones) {
-        //qDebug() << "Elemento en colisión, data(0):" << item->data(0).toString();
-        if (item->data(0).toString() == "plataforma") {
-            objetoFisico.setTiempo(0.0);
-            velocidadSalto = 0;
-            posicion.setX(viejaX);
-            posicion.setY(viejaY);
-            //if(ultimaDireccionX == "arriba"){posicion.setY(viejaY+1);}
-            //else{posicion.setY(viejaY);}
-            setPos(posicion);
-            colision = true;
-            //qDebug()<<"colision";
+        QString tipoObjeto = item->data(0).toString();
+
+        if (tipoObjeto == "plataforma") {
+            colisionPlataforma = true;
         }
-        if(item->data(0).toString() == "enemigo"){
-            if(item->data(1).toBool() == false){
-                item->setOpacity(0);
-                //this->escenario->removeItem(item);
-                item->setData(1,true);
-                disminuirVida();
-                qDebug() << "colision enemigo";
-            }
+        else if (tipoObjeto == "enemigo" && !item->data(1).toBool()) {
+            colisionEnemigo = true;
+            item->setOpacity(0);  // Ocultar enemigo
+            item->setData(1, true);  // Marcar enemigo como ya colisionado
         }
-        if(item->data(0).toString() == "sierra"){
-            posicion.setX(660);
-            posicion.setY(463);
-            setPos(posicion);
-            disminuirVida();
-            qDebug()<<"navajazo";
+        else if (tipoObjeto == "sierra") {
+            colisionSierra = true;
         }
-        return;
+    }
+
+    // Resolver las colisiones después de analizar todas
+    if (colisionPlataforma) {
+        objetoFisico.setTiempo(0.0);
+        velocidadSalto = 0;
+        posicion.setX(viejaX);
+        posicion.setY(viejaY);
+        setPos(posicion);  // Restaurar posición
+        colision = true;
+    }
+
+    if (colisionEnemigo) {
+        disminuirVida();
+        qDebug() << "Colisión con enemigo";
+    }
+
+    if (colisionSierra) {
+        posicion.setX(660);  // Reiniciar posición
+        posicion.setY(463);
+        setPos(posicion);
+        disminuirVida();
+        qDebug() << "Colisión con sierra";
     }
 }
-
 
 
 

@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //LECTURA DE USUARIOS
+    lectura(mapaUsuarios);
+
     //CONFIGURACION DE MENU PRINCIPAL (REDER PARA MANIPULACION DE ESCENARIOS)
     menuPrincipal = true;
     nivel = 0;
@@ -64,6 +67,16 @@ void MainWindow::eliminarNivel(){
         delete enemigo;
         enemigo = nullptr;
         qDebug() << "enemigo eliminado";
+    }
+    if(enemigo2){
+        delete enemigo2;
+        enemigo2 = nullptr;
+        qDebug() << "enemigo2 eliminado";
+    }
+    if(enemigo3){
+        delete enemigo3;
+        enemigo3 = nullptr;
+        qDebug() << "enemigo3 eliminado";
     }
     if(puntaje){
         puntaje->setVisible(false);
@@ -123,6 +136,65 @@ void MainWindow::keyPressEvent(QKeyEvent *event){
     }
 }
 
+void MainWindow::lectura(QMap<QString, QString> &usuarios){
+    // Ruta del archivo
+    QString nombreArchivo = "./../../usuarios/usuariosBase.txt";
+
+    // Crear un objeto QFile con el nombre del archivo
+    QFile archivo(nombreArchivo);
+
+    // Abrir el archivo en modo de lectura
+    if (!archivo.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Error al abrir el archivo:" << archivo.errorString();
+        return;
+    }
+
+    // Crear un objeto QTextStream para leer el archivo
+    QTextStream stream(&archivo);
+    // Leer el archivo línea por línea
+    while (!stream.atEnd()) {
+        QString linea = stream.readLine();  // Lee una línea
+        QString usuario = "";
+        QString contra = "";
+        bool usuarioListo = false;
+        for(int i = 0; i < (int)linea.size(); i++){
+            if(linea[i] != ',' && usuarioListo == false){usuario += linea[i];}
+            else{usuarioListo = true;}
+            if(usuarioListo == true && i != (int)linea.size()-1){contra += linea[i+1];}
+        }
+        usuarios[usuario] = contra;
+    }
+    // Cerrar el archivo
+    archivo.close();
+}
+
+void MainWindow::escritura(const QMap<QString, QString> &usuarios) {
+    // Ruta del archivo
+    QString nombreArchivo = "./../../usuarios/usuariosBase.txt";
+
+    // Crear un objeto QFile con el nombre del archivo
+    QFile archivo(nombreArchivo);
+
+    // Abrir el archivo en modo de escritura (sobrescribe el archivo si ya existe)
+    if (!archivo.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Error al abrir el archivo:" << archivo.errorString();
+        return;
+    }
+
+    // Crear un objeto QTextStream para escribir en el archivo
+    QTextStream stream(&archivo);
+
+    // Iterar sobre el QMap y escribir cada usuario y su contraseña
+    QMapIterator<QString, QString> i(usuarios);
+    while (i.hasNext()) {
+        i.next();
+        // Escribir el usuario y la contraseña, separados por una coma
+        stream << i.key() << "," << i.value() << "\n";
+    }
+
+    // Cerrar el archivo
+    archivo.close();
+}
 
 //-------------------SLOTS--------------------------
 void MainWindow::checkFinish(){
@@ -222,7 +294,25 @@ void MainWindow::nivel2()
     qDebug() << "Nivel 2 cargado sin errores";
 }
 
+void MainWindow::on_ingresar_clicked()
+{
+    // Obtener los valores ingresados en los QLineEdits
+    QString usuarioIngresado = ui->usuario->text();
+    QString contraseñaIngresada = ui->contra->text();
 
+    qDebug() << "Usuario: " << usuarioIngresado;
+    qDebug() << "Contraseña: " << contraseñaIngresada;
+
+    // Verificar si el usuario existe y la contraseña es correcta
+    if (this->mapaUsuarios.contains(usuarioIngresado) && this->mapaUsuarios[usuarioIngresado] == contraseñaIngresada) {
+        qDebug() << "Inicio de sesión exitoso";
+        QMessageBox::information(this, "Éxito", "Inicio de sesión exitoso.");
+        interfazPrincipal->cargarMenuNivel();
+    } else {
+        qDebug() << "Credenciales incorrectas";
+        QMessageBox::warning(this, "Error", "Usuario o contraseña incorrectos.");
+    }
+}
 
 
 

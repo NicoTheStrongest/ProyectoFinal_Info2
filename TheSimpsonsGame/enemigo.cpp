@@ -34,12 +34,6 @@ Enemigo::Enemigo(QPoint posicionInicial, int velocidad, int direccionActual, flo
     connect(timer, SIGNAL(timeout()), this, SLOT(cambiarSprite()));
     timer->start(500);
 }
-/*
-    sprite = new QPixmap(":/sprites/NPC1.png");
-    QColor colorAzul(151,198,222,255);
-    sprite->setMask(sprite->createMaskFromColor(colorAzul.rgb(), Qt::MaskInColor));
-    connect(timer, SIGNAL(timeout()), this, SLOT(mover()));
-*/
 
 //-------------------METODOS--------------------------
 void Enemigo::moverArriba(){
@@ -97,7 +91,7 @@ void Enemigo::moverNivel2(){
         posicion.setY(nuevaY);
     }
     setPos(posicion);
-    qDebug() << "Enemigo movido a X:" << posicion.x() << "Y:" << posicion.y();
+    //qDebug() << "Enemigo movido a X:" << posicion.x() << "Y:" << posicion.y();
 }
 
 void Enemigo::lanzarAntorcha(){
