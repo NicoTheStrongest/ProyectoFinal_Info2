@@ -15,8 +15,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     personaje.cpp \
-    render.cpp \
-    sprites.cpp
+    render.cpp
 
 HEADERS += \
     enemigo.h \
@@ -24,8 +23,7 @@ HEADERS += \
     jugador.h \
     mainwindow.h \
     personaje.h \
-    render.h \
-    sprites.h
+    render.h
 
 FORMS += \
     mainwindow.ui
@@ -38,4 +36,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Recursos.qrc
 
-DISTFILES +=
+DISTFILES += \
+    sprites/Sierra.png

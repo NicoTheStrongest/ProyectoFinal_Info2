@@ -21,28 +21,23 @@ public:
     explicit Render(QObject *parent = nullptr);
     Render(Ui::MainWindow *ui);
 
-    QGraphicsScene* escena;
-    QGraphicsPixmapItem* fondo;
-    int elegirOpcion();
+    //METODOS
+    void cargarMenuNivel();
     void cargarEscenaNivel1();
     void añadirBasura();
-    void añadirEnemigos();
-    void añadirObstaculos();
     void cargarEscenaNivel2();
     void añadirPlataformas();
     void dibujarPared(int x, int y, int ancho, int alto, QColor color);
     void mostrarMensajeFinal(short int vida, QPoint posicion);
-
 public slots:
     void volverAlMenuPrincipal();
-
-signals:
-
 private:
+    //ATRIBUTOS
     Ui::MainWindow* vista;
     QLabel* puntaje;
     QLabel* vida;
-
+    QGraphicsScene* escena;
+    QGraphicsPixmapItem* fondo;
 };
 
 #endif // RENDER_H

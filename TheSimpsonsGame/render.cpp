@@ -1,6 +1,4 @@
 #include "render.h"
-#include <QGraphicsProxyWidget>
-#include <QPushButton>
 
 Render::Render(QObject *parent)
     : QObject{parent}
@@ -8,10 +6,29 @@ Render::Render(QObject *parent)
 
 Render::Render(Ui::MainWindow *ui) : vista(ui){
     escena = new QGraphicsScene;
-    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/menuInicioJuego.png"));
     escena->addItem(fondo);
     vista->graphicsView->setScene(escena);
     vista->botonAtras->setVisible(false);
+    vista->botonNivel1->setVisible(false);
+    vista->botonNivel2->setVisible(false);
+    vista->botonSalir->setVisible(false);
+}
+
+
+//-------------------METODOS--------------------------
+void Render::cargarMenuNivel(){
+    QGraphicsScene *menuNivel = new QGraphicsScene;
+    QGraphicsPixmapItem *fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    menuNivel->addItem(fondo);
+    this->vista->graphicsView->setScene(menuNivel);
+    this->vista->ingresar->setVisible(false);
+    this->vista->contra->setVisible(false);
+    this->vista->usuario->setVisible(false);
+
+    this->vista->botonNivel1->setVisible(true);
+    this->vista->botonNivel2->setVisible(true);
+    this->vista->botonSalir->setVisible(true);
 }
 
 void Render::cargarEscenaNivel1(){
@@ -41,20 +58,6 @@ void Render::añadirBasura(){
         basuraItem->setData(0, "basura");
     }
 }
-
-/*
-void Render::añadirObstaculos(){
-    QPixmap obstaculoPixmap(":/sprites/obstaculoMadera.png");
-    QPixmap scaledObstaculoPixmap = obstaculoPixmap.scaled(50, 100, Qt::KeepAspectRatio);
-    QVector<QPoint> posiciones = {QPoint(580, 380), QPoint(986, 380), QPoint(1400, 386)};
-    for (const QPoint &pos : posiciones){
-        QGraphicsPixmapItem *obstaculoItem = new QGraphicsPixmapItem(scaledObstaculoPixmap);
-        obstaculoItem->setPos(pos);
-        escena->addItem(obstaculoItem);
-        obstaculoItem->setData(0,"obstaculo");
-    }
-}
-*/
 
 void Render::cargarEscenaNivel2(){
     vista->botonNivel1->setVisible(false);
@@ -93,22 +96,6 @@ void Render:: dibujarPared(int x, int y, int ancho, int alto, QColor color) {
     pared->setData(0, "plataforma");
 }
 
-void Render::volverAlMenuPrincipal(){
-    if (escena) {
-        escena->clear();
-        qDebug() << "escena limpia";
-    }
-    escena = new QGraphicsScene;
-    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
-    escena->addItem(fondo);
-    vista->graphicsView->setScene(escena);
-    vista->botonNivel1->setVisible(true);
-    vista->botonNivel2->setVisible(true);
-    vista->botonSalir->setVisible(true);
-    vista->botonAtras->setVisible(false);
-    qDebug() << "De vuelta en el menu principal";
-}
-
 void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     QGraphicsPixmapItem* mensajeFinal;
     QPixmap pixmapVolver(":/sprites/Atras.png");
@@ -119,7 +106,7 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
-    else if(posicion.x() >= 1852 && posicion.y() >= 340 && posicion.y() <= 480){
+    else{
         qDebug() << "Nivel completo";
         QPixmap pixmap(":/sprites/LevelCompleted.png");
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
@@ -141,10 +128,23 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
     vista->graphicsView->centerOn(mensajeFinal);
 }
 
-
-
-
-
-
+//-------------------SLOTS--------------------------
+void Render::volverAlMenuPrincipal(){
+    /*
+    if (escena) {
+        escena->clear();
+        qDebug() << "escena limpia";
+    }
+    */
+    escena = new QGraphicsScene;
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    escena->addItem(fondo);
+    vista->graphicsView->setScene(escena);
+    vista->botonNivel1->setVisible(true);
+    vista->botonNivel2->setVisible(true);
+    vista->botonSalir->setVisible(true);
+    vista->botonAtras->setVisible(false);
+    qDebug() << "De vuelta en el menu principal";
+}
 
 
