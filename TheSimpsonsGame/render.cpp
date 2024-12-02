@@ -1,6 +1,4 @@
 #include "render.h"
-#include <QGraphicsProxyWidget>
-#include <QPushButton>
 
 Render::Render(QObject *parent)
     : QObject{parent}
@@ -8,14 +6,31 @@ Render::Render(QObject *parent)
 
 Render::Render(Ui::MainWindow *ui) : vista(ui){
     escena = new QGraphicsScene;
-    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/menuInicioJuego.png"));
     escena->addItem(fondo);
     vista->graphicsView->setScene(escena);
     vista->botonAtras->setVisible(false);
+    vista->botonNivel1->setVisible(false);
+    vista->botonNivel2->setVisible(false);
+    vista->botonSalir->setVisible(false);
 }
 
 
 //-------------------METODOS--------------------------
+void Render::cargarMenuNivel(){
+    QGraphicsScene *menuNivel = new QGraphicsScene;
+    QGraphicsPixmapItem *fondo = new QGraphicsPixmapItem(QPixmap(":/sprites/MenuPrincipal.png"));
+    menuNivel->addItem(fondo);
+    this->vista->graphicsView->setScene(menuNivel);
+    this->vista->ingresar->setVisible(false);
+    this->vista->contra->setVisible(false);
+    this->vista->usuario->setVisible(false);
+
+    this->vista->botonNivel1->setVisible(true);
+    this->vista->botonNivel2->setVisible(true);
+    this->vista->botonSalir->setVisible(true);
+}
+
 void Render::cargarEscenaNivel1(){
     vista->botonNivel1->setVisible(false);
     vista->botonNivel2->setVisible(false);
@@ -97,14 +112,6 @@ void Render::mostrarMensajeFinal(short int vida, QPoint posicion){
         pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
         mensajeFinal = new QGraphicsPixmapItem(pixmap);
     }
-    /*
-    else if(posicion.x() >= 1852 && posicion.y() >= 340 && posicion.y() <= 480){
-        qDebug() << "Nivel completo";
-        QPixmap pixmap(":/sprites/LevelCompleted.png");
-        pixmap = pixmap.scaled(300, 300, Qt::KeepAspectRatio);
-        mensajeFinal = new QGraphicsPixmapItem(pixmap);
-    }
-    */
 
     mensajeFinal->setPos((escena->width() - mensajeFinal->pixmap().width()) / 2, (escena->height() - mensajeFinal->pixmap().height()) / 2);
 
@@ -139,8 +146,5 @@ void Render::volverAlMenuPrincipal(){
     vista->botonAtras->setVisible(false);
     qDebug() << "De vuelta en el menu principal";
 }
-
-
-
 
 

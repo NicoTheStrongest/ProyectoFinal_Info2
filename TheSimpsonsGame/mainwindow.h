@@ -6,11 +6,16 @@
 #include <QPainter>
 #include <QGraphicsItem>
 #include <QRectF>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QMessageBox>
 
 #include "personaje.h"
 #include "render.h"
 #include "enemigo.h"
 
+using namespace std;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -30,12 +35,16 @@ public:
     void conectarBotones();
     void eliminarNivel();
     void keyPressEvent(QKeyEvent *event) override;
+    void lectura(QMap<QString, QString> &usuarios);
+    void escritura(const QMap<QString, QString> &usuarios);
 public slots:
     void checkFinish();
     void actualizarPuntaje(short int nuevoPuntaje);
     void actualizarVida(short int nuevaVida);
     void nivel1();
     void nivel2();
+private slots:
+    void on_ingresar_clicked();
 private:
     //ATRIBUTOS
     Ui::MainWindow *ui;
@@ -48,6 +57,7 @@ private:
     QLabel* puntaje;
     QLabel* vida;
     QTimer* timer;
+    QMap<QString, QString> mapaUsuarios;
     bool menuPrincipal;
     short int nivel;
 };
